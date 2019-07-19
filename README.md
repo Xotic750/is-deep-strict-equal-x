@@ -50,14 +50,14 @@ Recursion stops when both sides differ or both sides encounter a circular refere
 WeakMap and WeakSet comparison does not rely on their values. See below for further details.
 
 **Kind**: Exported function  
-**Returns**: <code>boolean</code> - `true` if `actual` and `expected` are deemed equal,
+**Returns**: <code>boolean</code> - `true` if `val1` and `val2` are deemed equal,
 otherwise `false`.  
 **See**: https://nodejs.org/api/assert.html
 
 | Param    | Type            | Description               |
 | -------- | --------------- | ------------------------- |
-| actual   | <code>\*</code> | First comparison object.  |
-| expected | <code>\*</code> | Second comparison object. |
+| val1     | <code>\*</code> | First comparison object.  |
+| val2     | <code>\*</code> | Second comparison object. |
 
 **Example**
 
@@ -111,7 +111,17 @@ isDeepStrictEqual(weakMap1, weakMap3); // false
 
 ### `is-deep-strict-equal-x.isDeepEqual` ⇒ <code>boolean</code>
 
-##Deprecated
+##Deprecated - Use isDeepStrictEqual instead!
+
+**Kind**: Exported function  
+**Returns**: <code>boolean</code> - `true` if `val1` and `val2` are deemed equal,
+otherwise `false`.  
+**See**: https://nodejs.org/api/assert.html
+
+| Param    | Type            | Description               |
+| -------- | --------------- | ------------------------- |
+| val1     | <code>\*</code> | First comparison object.  |
+| val2     | <code>\*</code> | Second comparison object. |
 
 **Example**
 
