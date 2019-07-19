@@ -477,7 +477,7 @@ describe('isDeepStrictEqual', function() {
   });
 
   itBigInt('bigint', function() {
-    expect.assertions(1);
+    expect.assertions(6);
     /* eslint-disable-next-line babel/new-cap,no-undef */
     utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
     /* eslint-disable-next-line babel/new-cap,no-undef */
