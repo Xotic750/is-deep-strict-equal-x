@@ -1,4 +1,21 @@
+import isBigIntObject from 'is-bigint';
 import {isDeepStrictEqual} from 'src/is-deep-strict-equal-x';
+
+const bigInt48 = (function getBigInt48() {
+  if (typeof BigInt === 'function') {
+    try {
+      /* eslint-disable-next-line babel/new-cap,no-undef */
+      return BigInt(48);
+    } catch (ignore) {
+      // empty
+    }
+  }
+
+  return void 0;
+})();
+
+const hasBigInt = isBigIntObject(bigInt48);
+const itBigInt = hasBigInt ? it : xit;
 
 class MyDate extends Date {
   constructor(...args) {
@@ -374,7 +391,7 @@ describe('isDeepStrictEqual', function() {
 
   /* eslint-disable-next-line jest/expect-expect */
   it('handle boxed primitives', function() {
-    expect.assertions(36);
+    expect.assertions(30);
     // Handle boxed primitives
 
     const boxedString = Object('test');
@@ -394,10 +411,6 @@ describe('isDeepStrictEqual', function() {
     notUtilIsDeepStrict(boxedString, Object('test'));
     boxedSymbol.slow = true;
     notUtilIsDeepStrict(boxedSymbol, {});
-    /* eslint-disable-next-line babel/new-cap,no-undef */
-    utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
-    /* eslint-disable-next-line babel/new-cap,no-undef */
-    notUtilIsDeepStrict(Object(BigInt(1)), Object(BigInt(2)));
 
     const booleanish = Object(true);
     Object.defineProperty(booleanish, Symbol.toStringTag, {value: 'String'});
@@ -412,12 +425,6 @@ describe('isDeepStrictEqual', function() {
     const stringish = Object('0');
     Object.defineProperty(stringish, Symbol.toStringTag, {value: 'Number'});
     notUtilIsDeepStrict(stringish, Object(0));
-
-    /* eslint-disable-next-line babel/new-cap,no-undef,no-new-object */
-    const bigintish = new Object(BigInt(42));
-    Object.defineProperty(bigintish, Symbol.toStringTag, {value: 'String'});
-    Object.setPrototypeOf(bigintish, String.prototype);
-    notUtilIsDeepStrict(bigintish, Object('42'));
 
     /* eslint-disable-next-line no-new-object */
     const symbolish = new Object(Symbol('fhqwhgads'));
@@ -467,5 +474,19 @@ describe('isDeepStrictEqual', function() {
     notUtilIsDeepStrict(boxedStringA, boxedStringB);
     boxedStringA[symbol1] = true;
     utilIsDeepStrict(a, b);
+  });
+
+  itBigInt('bigint', function() {
+    expect.assertions(1);
+    /* eslint-disable-next-line babel/new-cap,no-undef */
+    utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
+    /* eslint-disable-next-line babel/new-cap,no-undef */
+    notUtilIsDeepStrict(Object(BigInt(1)), Object(BigInt(2)));
+
+    /* eslint-disable-next-line babel/new-cap,no-undef,no-new-object */
+    const bigintish = new Object(BigInt(42));
+    Object.defineProperty(bigintish, Symbol.toStringTag, {value: 'String'});
+    Object.setPrototypeOf(bigintish, String.prototype);
+    notUtilIsDeepStrict(bigintish, Object('42'));
   });
 });

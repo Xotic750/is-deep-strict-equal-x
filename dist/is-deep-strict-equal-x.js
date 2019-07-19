@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-19T20:46:42.741Z",
+  "date": "2019-07-19T23:07:03.669Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "9a40bb5942776ec98f35",
+  "hash": "9ce7ae39f21ef33912a8",
   "license": "MIT",
   "version": "1.0.0"
 }
@@ -1935,7 +1935,7 @@ var hop = {}.hasOwnProperty;
  *
  * @param {!object} object - The object to test.
  * @throws {TypeError} If object is null or undefined.
- * @param {string|Symbol} property - The name or Symbol of the property to test.
+ * @param {string|number|Symbol} property - The name or Symbol of the property to test.
  * @returns {boolean} `true` if the property is set on `object`, else `false`.
  */
 
