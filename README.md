@@ -111,7 +111,7 @@ isDeepStrictEqual(weakMap1, weakMap3); // false
 
 ### `is-deep-strict-equal-x.isDeepEqual` ⇒ <code>boolean</code>
 
-##Deprecated - Use isDeepStrictEqual instead!
+#Deprecated - Use isDeepStrictEqual instead!
 
 **Kind**: Exported function  
 **Returns**: <code>boolean</code> - `true` if `val1` and `val2` are deemed equal,
