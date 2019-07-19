@@ -52,7 +52,7 @@ WeakMap and WeakSet comparison does not rely on their values. See below for furt
 **Kind**: Exported function  
 **Returns**: <code>boolean</code> - `true` if `val1` and `val2` are deemed equal,
 otherwise `false`.  
-**See**: https://nodejs.org/api/assert.html
+**See**: https://nodejs.org/dist/latest-v10.x/docs/api/util.html#util_util_isdeepstrictequal_val1_val2
 
 | Param | Type            | Description               |
 | ----- | --------------- | ------------------------- |
@@ -116,7 +116,6 @@ isDeepStrictEqual(weakMap1, weakMap3); // false
 **Kind**: Exported function  
 **Returns**: <code>boolean</code> - `true` if `val1` and `val2` are deemed equal,
 otherwise `false`.  
-**See**: https://nodejs.org/api/assert.html
 
 | Param | Type            | Description               |
 | ----- | --------------- | ------------------------- |
