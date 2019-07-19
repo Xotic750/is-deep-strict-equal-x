@@ -24,9 +24,13 @@
 
 node's isDeepStrictEqual algorithm.
 
-<a name="exp_module_deep-equal-x--module.exports"></a>
+- [is-deep-strictequal-x](#module_is-deep-strictequal-x)
+  - [`.isDeepStrictEqual`](#module_is-deep-strictequal-x.isDeepStrictEqual) ⇒ <code>boolean</code>
+  - [`.isDeepEqual`](#module_is-deep-strictequal-x.isDeepEqual) ⇒ <code>boolean</code>
 
-### `module.exports(actual, expected, [strict])` ⇒ <code>boolean</code> ⏏
+<a name="module_collections-x.isDeepStrictEqual"></a>
+
+### `is-deep-strict-equal-x.isDeepStrictEqual` ⇒ <code>boolean</code>
 
 Tests for deep equality between the actual and expected parameters. "Deep" equality means
 that the enumerable "own" properties of child objects are recursively evaluated also by
@@ -58,7 +62,7 @@ otherwise `false`.
 **Example**
 
 ```js
-import {isDeepStrictEqual, isDeepEqual} from 'is-deep-strict-equal-x';
+import {isDeepStrictEqual} from 'is-deep-strict-equal-x';
 
 // This fails because 1 !== '1'.
 isDeepStrictEqual({a: 1}, {a: '1'}); // false
@@ -101,11 +105,22 @@ isDeepStrictEqual(weakMap1, weakMap2); // true
 
 // Fails because weakMap3 has a property that weakMap1 does not contain:
 isDeepStrictEqual(weakMap1, weakMap3); // false
+```
 
+<a name="module_collections-x.isDeepEqual"></a>
+
+### `is-deep-strict-equal-x.isDeepEqual` ⇒ <code>boolean</code>
+
+##Deprecated
+
+**Example**
+
+```js
+import {isDeepEqual} from 'is-deep-strict-equal-x';
 
 isDeepEqual(Error('a'), Error('b')); // true
 
-isDeepEqual(4, '4');// => true
+isDeepEqual(4, '4'); // => true
 
 isDeepEqual({a: 4, b: '1'}, {b: '1', a: 4}); // => true
 
