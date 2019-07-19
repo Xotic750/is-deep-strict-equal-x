@@ -54,10 +54,10 @@ WeakMap and WeakSet comparison does not rely on their values. See below for furt
 otherwise `false`.  
 **See**: https://nodejs.org/api/assert.html
 
-| Param    | Type            | Description               |
-| -------- | --------------- | ------------------------- |
-| val1     | <code>\*</code> | First comparison object.  |
-| val2     | <code>\*</code> | Second comparison object. |
+| Param | Type            | Description               |
+| ----- | --------------- | ------------------------- |
+| val1  | <code>\*</code> | First comparison object.  |
+| val2  | <code>\*</code> | Second comparison object. |
 
 **Example**
 
@@ -118,10 +118,10 @@ isDeepStrictEqual(weakMap1, weakMap3); // false
 otherwise `false`.  
 **See**: https://nodejs.org/api/assert.html
 
-| Param    | Type            | Description               |
-| -------- | --------------- | ------------------------- |
-| val1     | <code>\*</code> | First comparison object.  |
-| val2     | <code>\*</code> | Second comparison object. |
+| Param | Type            | Description               |
+| ----- | --------------- | ------------------------- |
+| val1  | <code>\*</code> | First comparison object.  |
+| val2  | <code>\*</code> | Second comparison object. |
 
 **Example**
 
