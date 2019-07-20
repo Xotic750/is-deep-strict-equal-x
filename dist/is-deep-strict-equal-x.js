@@ -1,13 +1,13 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-20T15:20:06.329Z",
+  "date": "2019-07-20T20:05:20.869Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "9ce7ae39f21ef33912a8",
+  "hash": "81c6d9fe20321cbfe3ba",
   "license": "MIT",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -5334,7 +5334,9 @@ if (object_create_x_esm_isWorking) {
     var getEmptyViaActiveX = function _getEmptyViaActiveX() {
       /* eslint-disable-next-line no-undef */
       var xDoc = new ActiveXObject('htmlfile');
-      xDoc.write('<script></script>');
+      /* eslint-disable-next-line no-useless-escape,prettier/prettier */
+
+      xDoc.write('<script><\/script>');
       xDoc.close(); // noinspection JSUnresolvedVariable
 
       var empty = xDoc.parentWindow.Object.prototype;
