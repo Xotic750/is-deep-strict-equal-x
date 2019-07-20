@@ -28,7 +28,7 @@ node's isDeepStrictEqual algorithm.
   - [`.isDeepStrictEqual`](#module_is-deep-strictequal-x.isDeepStrictEqual) ⇒ <code>boolean</code>
   - [`.isDeepEqual`](#module_is-deep-strictequal-x.isDeepEqual) ⇒ <code>boolean</code>
 
-<a name="module_collections-x.isDeepStrictEqual"></a>
+<a name="module_is-deep-strictequal-x.isDeepStrictEqual"></a>
 
 ### `is-deep-strict-equal-x.isDeepStrictEqual` ⇒ <code>boolean</code>
 
@@ -107,7 +107,7 @@ isDeepStrictEqual(weakMap1, weakMap2); // true
 isDeepStrictEqual(weakMap1, weakMap3); // false
 ```
 
-<a name="module_collections-x.isDeepEqual"></a>
+<a name="module_is-deep-strictequal-x.isDeepEqual"></a>
 
 ### `is-deep-strict-equal-x.isDeepEqual` ⇒ <code>boolean</code>
 
