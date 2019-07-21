@@ -1,13 +1,13 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-20T20:05:20.869Z",
+  "date": "2019-07-21T01:40:56.013Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "81c6d9fe20321cbfe3ba",
+  "hash": "2e09cde700d296a54e28",
   "license": "MIT",
-  "version": "1.0.3"
+  "version": "1.0.4"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -378,32 +378,6 @@ module.exports = supportsStandardArguments ? isStandardArguments : isLegacyArgum
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -473,7 +447,33 @@ module.exports = function whichTypedArray(value) {
 	return tryTypedArrays(value);
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(9)))
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 /* 10 */
@@ -634,7 +634,7 @@ module.exports = function hasNativeSymbols() {
 	return hasSymbolSham();
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(9)))
 
 /***/ }),
 /* 16 */
@@ -822,7 +822,7 @@ module.exports = function isTypedArray(value) {
 	return tryTypedArrays(value);
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(9)))
 
 /***/ }),
 /* 20 */
@@ -3270,7 +3270,7 @@ var is_bigint = __webpack_require__(4);
 var is_bigint_default = /*#__PURE__*/__webpack_require__.n(is_bigint);
 
 // EXTERNAL MODULE: ./node_modules/which-typed-array/index.js
-var which_typed_array = __webpack_require__(9);
+var which_typed_array = __webpack_require__(8);
 var which_typed_array_default = /*#__PURE__*/__webpack_require__.n(which_typed_array);
 
 // CONCATENATED MODULE: ./node_modules/same-value-x/dist/same-value-x.esm.js
@@ -3642,10 +3642,6 @@ var get_own_property_symbols_x_esm_getOwnPropertySymbols = function getOwnProper
 
 /* harmony default export */ var get_own_property_symbols_x_esm = (get_own_property_symbols_x_esm_getOwnPropertySymbols);
 
-
-// EXTERNAL MODULE: ./node_modules/arraybuffer-equal/index.js
-var arraybuffer_equal = __webpack_require__(10);
-var arraybuffer_equal_default = /*#__PURE__*/__webpack_require__.n(arraybuffer_equal);
 
 // CONCATENATED MODULE: ./node_modules/array-slice-x/dist/array-slice-x.esm.js
 
@@ -6659,6 +6655,86 @@ if (ExportSet === $SetObject) {
 var collections_x_esm_isSet = $$isSet;
 
 
+// EXTERNAL MODULE: ./node_modules/arraybuffer-equal/index.js
+var arraybuffer_equal = __webpack_require__(10);
+var arraybuffer_equal_default = /*#__PURE__*/__webpack_require__.n(arraybuffer_equal);
+
+// CONCATENATED MODULE: ./node_modules/is-data-view-x/dist/is-data-view-x.esm.js
+var is_data_view_x_esm_this = undefined;
+
+function is_data_view_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
+
+
+
+
+
+
+
+var hasDView = typeof DataView === 'function';
+var getByteLength = false;
+var legacyCheck;
+
+if (hasDView) {
+  var is_data_view_x_esm_res = attempt_x_esm(function () {
+    is_data_view_x_esm_newArrowCheck(this, is_data_view_x_esm_this);
+
+    /* eslint-disable-next-line compat/compat */
+    return new DataView(new ArrayBuffer(4));
+  }.bind(undefined));
+  var dataView = is_data_view_x_esm_res.threw === false && is_object_like_x_esm(is_data_view_x_esm_res.value) && is_data_view_x_esm_res.value;
+
+  if (dataView && has_to_string_tag_x_esm) {
+    /* eslint-disable-next-line compat/compat */
+    var is_data_view_x_esm_descriptor = object_get_own_property_descriptor_x_esm(DataView.prototype, 'byteLength');
+
+    if (is_data_view_x_esm_descriptor && typeof is_data_view_x_esm_descriptor.get === 'function') {
+      is_data_view_x_esm_res = attempt_x_esm.call(dataView, is_data_view_x_esm_descriptor.get);
+      getByteLength = is_data_view_x_esm_res.threw === false && typeof is_data_view_x_esm_res.value === 'number' && is_data_view_x_esm_descriptor.get;
+    }
+  }
+
+  if (getByteLength === false) {
+    var dViewTag = '[object DataView]';
+
+    if (to_string_tag_x_esm(dataView) === dViewTag) {
+      legacyCheck = function _legacyCheck(object) {
+        return to_string_tag_x_esm(object) === dViewTag;
+      };
+    } else {
+      legacyCheck = function _legacyCheck(object) {
+        var isByteLength = typeof object.byteLength === 'number';
+        var isByteOffset = typeof object.byteOffset === 'number';
+        var isGetFloat32 = typeof object.getFloat32 === 'function';
+        var isSetFloat64 = typeof object.setFloat64 === 'function';
+        return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && is_array_buffer_x_esm(object.buffer);
+      };
+    }
+  }
+}
+/**
+ * Determine if an `object` is an `DataView`.
+ *
+ * @param {*} object - The object to test.
+ * @returns {boolean} `true` if the `object` is a `DataView`, else `false`.
+ */
+
+
+var is_data_view_x_esm_isDataView = function isDataView(object) {
+  if (hasDView === false || is_object_like_x_esm(object) === false) {
+    return false;
+  }
+
+  if (legacyCheck) {
+    return legacyCheck(object);
+  }
+
+  var result = attempt_x_esm.call(object, getByteLength);
+  return result.threw === false && typeof result.value === 'number';
+};
+
+/* harmony default export */ var is_data_view_x_esm = (is_data_view_x_esm_isDataView);
+
+
 // CONCATENATED MODULE: ./dist/is-deep-strict-equal-x.esm.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDeepEqual", function() { return isDeepEqual; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDeepStrictEqual", function() { return isDeepStrictEqual; });
@@ -6681,6 +6757,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 
 
 
@@ -6739,8 +6816,22 @@ var StringValueOf = is_deep_strict_equal_x_esm_EMPTY_STRING.valueOf;
 
 var SymbolValueOf = has_symbol_support_x_esm ? Symbol(is_deep_strict_equal_x_esm_EMPTY_STRING).valueOf : is_deep_strict_equal_x_esm_UNDEFINED;
 
-var isArrayBufferView = function isArrayBufferView() {
-  return false;
+var hasArrayBuffer = typeof ArrayBuffer === 'function' && function testArrayBuffer() {
+  try {
+    /* eslint-disable-next-line compat/compat */
+    return is_array_buffer_x_esm(new ArrayBuffer(4));
+  } catch (ignore) {
+    return false;
+  }
+}();
+/* eslint-disable-next-line compat/compat */
+
+
+var hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
+var is_deep_strict_equal_x_esm_isArrayBufferView = hasIsView ? ArrayBuffer.isView
+/* eslint-disable-line compat/compat */
+: function isArrayBufferView(value) {
+  return which_typed_array_default()(value) !== false || is_data_view_x_esm(value);
 };
 
 var is_deep_strict_equal_x_esm_isFloat32Array = function isFloat32Array(value) {
@@ -6810,12 +6901,12 @@ function areSimilarTypedArrays(a, b) {
   /* eslint-disable-next-line compat/compat */
 
 
-  return arraybuffer_equal_default()(new Uint8Array(a.buffer, a.byteOffset, a.byteLength), new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
+  return arraybuffer_equal_default()(a.buffer, new Uint8Array(b.buffer, b.byteOffset, b.byteLength).buffer);
 }
 
 function areEqualArrayBuffers(buf1, buf2) {
   /* eslint-disable-next-line compat/compat */
-  return buf1.byteLength === buf2.byteLength && arraybuffer_equal_default()(new Uint8Array(buf1), new Uint8Array(buf2));
+  return buf1.byteLength === buf2.byteLength && arraybuffer_equal_default()(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
 }
 
 function setHasEqualElement(set, val1, strict, memo) {
@@ -7342,7 +7433,7 @@ innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
     if (val1.message !== val2.message || val1.name !== val2.name) {
       return false;
     }
-  } else if (isArrayBufferView(val1)) {
+  } else if (is_deep_strict_equal_x_esm_isArrayBufferView(val1)) {
     if (!strict && (is_deep_strict_equal_x_esm_isFloat32Array(val1) || is_deep_strict_equal_x_esm_isFloat64Array(val1))) {
       if (!areSimilarFloatArrays(val1, val2)) {
         return false;

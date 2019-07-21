@@ -21,11 +21,12 @@ import numberIsNaN from 'is-nan-x';
 import getPrototypeOf from 'get-prototype-of-x';
 import isArray from 'is-array-x';
 import getOwnPropertySymbols from 'get-own-property-symbols-x';
-import compare from 'arraybuffer-equal';
 import getOwnPropertyNames from 'get-own-property-names-x';
 import arrayFilter from 'array-filter-x';
 import isIndex from 'is-index-x';
 import {MapConstructor, SetConstructor} from 'collections-x';
+import isArrayBufferEqual from 'arraybuffer-equal';
+import isDataView from 'is-data-view-x';
 
 /* eslint-disable-next-line no-void */
 const UNDEFINED = void 0;
@@ -57,10 +58,25 @@ const StringValueOf = EMPTY_STRING.valueOf;
 
 /* eslint-disable-next-line compat/compat */
 const SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
+const hasArrayBuffer =
+  typeof ArrayBuffer === 'function' &&
+  (function testArrayBuffer() {
+    try {
+      /* eslint-disable-next-line compat/compat */
+      return isAnyArrayBuffer(new ArrayBuffer(4));
+    } catch (ignore) {
+      return false;
+    }
+  })();
 
-const isArrayBufferView = function isArrayBufferView() {
-  return false;
-};
+/* eslint-disable-next-line compat/compat */
+const hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
+
+const isArrayBufferView = hasIsView
+  ? ArrayBuffer.isView /* eslint-disable-line compat/compat */
+  : function isArrayBufferView(value) {
+      return whichTypedArray(value) !== false || isDataView(value);
+    };
 
 const isFloat32Array = function isFloat32Array(value) {
   // noinspection JSIncompatibleTypesComparison
@@ -121,12 +137,12 @@ function areSimilarTypedArrays(a, b) {
   }
 
   /* eslint-disable-next-line compat/compat */
-  return compare(new Uint8Array(a.buffer, a.byteOffset, a.byteLength), new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
+  return isArrayBufferEqual(a.buffer, new Uint8Array(b.buffer, b.byteOffset, b.byteLength).buffer);
 }
 
 function areEqualArrayBuffers(buf1, buf2) {
   /* eslint-disable-next-line compat/compat */
-  return buf1.byteLength === buf2.byteLength && compare(new Uint8Array(buf1), new Uint8Array(buf2));
+  return buf1.byteLength === buf2.byteLength && isArrayBufferEqual(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
 }
 
 function setHasEqualElement(set, val1, strict, memo) {

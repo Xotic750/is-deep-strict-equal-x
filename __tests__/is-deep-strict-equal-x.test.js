@@ -476,17 +476,308 @@ describe('isDeepStrictEqual', function() {
     utilIsDeepStrict(a, b);
   });
 
-  itBigInt('bigint', function() {
-    expect.assertions(6);
-    /* eslint-disable-next-line babel/new-cap,no-undef */
-    utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
-    /* eslint-disable-next-line babel/new-cap,no-undef */
-    notUtilIsDeepStrict(Object(BigInt(1)), Object(BigInt(2)));
+  /* eslint-disable-next-line jest/expect-expect */
+  it('array buffer', function() {
+    expect.assertions(8);
+    utilIsDeepStrict(new ArrayBuffer(4), new ArrayBuffer(4));
+    notUtilIsDeepStrict(new ArrayBuffer(4), new ArrayBuffer(8));
+    notUtilIsDeepStrict(new ArrayBuffer(4), new DataView(new ArrayBuffer(4)));
+    notUtilIsDeepStrict(new ArrayBuffer(4), new Int8Array(4));
+  });
 
-    /* eslint-disable-next-line babel/new-cap,no-undef,no-new-object */
-    const bigintish = new Object(BigInt(42));
-    Object.defineProperty(bigintish, Symbol.toStringTag, {value: 'String'});
-    Object.setPrototypeOf(bigintish, String.prototype);
-    notUtilIsDeepStrict(bigintish, Object('42'));
+  /* eslint-disable-next-line jest/expect-expect */
+  it('data view', function() {
+    expect.assertions(6);
+    utilIsDeepStrict(new DataView(new ArrayBuffer(4)), new DataView(new ArrayBuffer(4)));
+    notUtilIsDeepStrict(new DataView(new ArrayBuffer(4)), new DataView(new ArrayBuffer(8)));
+    notUtilIsDeepStrict(new DataView(new ArrayBuffer(4)), new Int8Array(4));
+  });
+
+  describe('typed arrays', function() {
+    it('an Int8Array', function() {
+      expect.assertions(6);
+
+      // Int8Array
+      {
+        const a = new Int8Array(4);
+        const b = new Int8Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Int8Array(4);
+        const b = new Int8Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Int8Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Uint8Array', function() {
+      expect.assertions(6);
+      // Uint8Array
+      {
+        const a = new Uint8Array(4);
+        const b = new Uint8Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Uint8Array(4);
+        const b = new Uint8Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Uint8Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Uint8ClampedArray', function() {
+      expect.assertions(6);
+      // Uint8ClampedArray
+      {
+        const a = new Uint8ClampedArray(4);
+        const b = new Uint8ClampedArray(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Uint8ClampedArray(4);
+        const b = new Uint8ClampedArray(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Uint8ClampedArray(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Int16Array', function() {
+      expect.assertions(6);
+      // Int16Array
+      {
+        const a = new Int16Array(4);
+        const b = new Int16Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Int16Array(4);
+        const b = new Int16Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Int16Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Uint16Array', function() {
+      expect.assertions(6);
+      // Uint16Array
+      {
+        const a = new Uint16Array(4);
+        const b = new Uint16Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Uint16Array(4);
+        const b = new Uint16Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Uint16Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Int32Array', function() {
+      expect.assertions(6);
+      // Int32Array
+      {
+        const a = new Int32Array(4);
+        const b = new Int32Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Int32Array(4);
+        const b = new Int32Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Int32Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Uint32Array', function() {
+      expect.assertions(6);
+      // Uint32Array
+      {
+        const a = new Uint32Array(4);
+        const b = new Uint32Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Uint32Array(4);
+        const b = new Uint32Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Uint32Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Float32Array', function() {
+      expect.assertions(6);
+      // Float32Array
+      {
+        const a = new Float32Array(4);
+        const b = new Float32Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Float32Array(4);
+        const b = new Float32Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Float32Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    it('an Float64Array', function() {
+      expect.assertions(6);
+      // Float64Array
+      {
+        const a = new Float64Array(4);
+        const b = new Float64Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        const a = new Float64Array(4);
+        const b = new Float64Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+
+      {
+        const a = new Float64Array(4);
+        const b = [];
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+  });
+
+  describe('bigint', function() {
+    itBigInt('bigint', function() {
+      expect.assertions(6);
+      /* eslint-disable-next-line babel/new-cap,no-undef */
+      utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
+      /* eslint-disable-next-line babel/new-cap,no-undef */
+      notUtilIsDeepStrict(Object(BigInt(1)), Object(BigInt(2)));
+
+      /* eslint-disable-next-line babel/new-cap,no-undef,no-new-object */
+      const bigintish = new Object(BigInt(42));
+      Object.defineProperty(bigintish, Symbol.toStringTag, {value: 'String'});
+      Object.setPrototypeOf(bigintish, String.prototype);
+      notUtilIsDeepStrict(bigintish, Object('42'));
+    });
+
+    itBigInt('an BigInt64Array', function() {
+      expect.assertions(4);
+      // BigInt64Array
+      {
+        /* eslint-disable-next-line no-undef */
+        const a = new BigInt64Array(4);
+        /* eslint-disable-next-line no-undef */
+        const b = new BigInt64Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        /* eslint-disable-next-line no-undef */
+        const a = new BigInt64Array(4);
+        /* eslint-disable-next-line no-undef */
+        const b = new BigInt64Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
+
+    itBigInt('an BigUint64Array', function() {
+      expect.assertions(4);
+      // BigUint64Array
+      {
+        /* eslint-disable-next-line no-undef */
+        const a = new BigUint64Array(4);
+        /* eslint-disable-next-line no-undef */
+        const b = new BigUint64Array(4);
+        expect(isDeepStrictEqual(a, b)).toBe(true);
+        expect(isDeepStrictEqual(b, a)).toBe(true);
+      }
+
+      {
+        /* eslint-disable-next-line no-undef */
+        const a = new BigUint64Array(4);
+        /* eslint-disable-next-line no-undef */
+        const b = new BigUint64Array(8);
+        expect(isDeepStrictEqual(a, b)).toBe(false);
+        expect(isDeepStrictEqual(b, a)).toBe(false);
+      }
+    });
   });
 });
