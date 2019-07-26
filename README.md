@@ -1,10 +1,12 @@
-<a href="https://travis-ci.org/Xotic750/is-deep-strict-equal-x"
+<a
+  href="https://travis-ci.org/Xotic750/is-deep-strict-equal-x"
   title="Travis status">
 <img
   src="https://travis-ci.org/Xotic750/is-deep-strict-equal-x.svg?branch=master"
   alt="Travis status" height="18">
 </a>
-<a href="https://david-dm.org/Xotic750/is-deep-strict-equal-x"
+<a
+  href="https://david-dm.org/Xotic750/is-deep-strict-equal-x"
   title="Dependency status">
 <img src="https://david-dm.org/Xotic750/is-deep-strict-equal-x/status.svg"
   alt="Dependency status" height="18"/>
@@ -15,15 +17,23 @@
 <img src="https://david-dm.org/Xotic750/is-deep-strict-equal-x/dev-status.svg"
   alt="devDependency status" height="18"/>
 </a>
-<a href="https://badge.fury.io/js/is-deep-strict-equal-x"
+<a
+  href="https://badge.fury.io/js/is-deep-strict-equal-x"
   title="npm version">
 <img src="https://badge.fury.io/js/is-deep-strict-equal-x.svg"
   alt="npm version" height="18">
 </a>
-<a href="https://www.jsdelivr.com/package/npm/is-deep-strict-equal-x"
+<a
+  href="https://www.jsdelivr.com/package/npm/is-deep-strict-equal-x"
   title="jsDelivr hits">
 <img src="https://data.jsdelivr.com/v1/package/npm/is-deep-strict-equal-x/badge?style=rounded"
   alt="jsDelivr hits" height="18">
+</a>
+<a
+  href="https://bettercodehub.com/results/Xotic750/is-deep-strict-equal-x"
+  title="bettercodehub score">
+<img src="https://bettercodehub.com/edge/badge/Xotic750/is-deep-strict-equal-x?branch=master"
+  alt="bettercodehub score" height="18">
 </a>
 
 <a name="module_deep-equal-x"></a>
