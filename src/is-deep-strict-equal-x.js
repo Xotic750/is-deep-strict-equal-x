@@ -31,7 +31,6 @@ import isDataView from 'is-data-view-x';
 /* eslint-disable-next-line no-void */
 const UNDEFINED = void 0;
 const EMPTY_STRING = '';
-
 let innerDeepEqual;
 
 const bigInt48 = (function getBigInt48() {
@@ -48,14 +47,11 @@ const bigInt48 = (function getBigInt48() {
 })();
 
 const hasBigInt = isBigIntObject(bigInt48);
-
 const BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
 const BooleanValueOf = true.valueOf;
 const DateGetTime = new Date().getTime;
 const NumberValueOf = (0).valueOf;
-// const ObjectPrototype = Object.prototype;
 const StringValueOf = EMPTY_STRING.valueOf;
-
 /* eslint-disable-next-line compat/compat */
 const SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
 const hasArrayBuffer =
@@ -71,7 +67,6 @@ const hasArrayBuffer =
 
 /* eslint-disable-next-line compat/compat */
 const hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
-
 const isArrayBufferView = hasIsView
   ? ArrayBuffer.isView /* eslint-disable-line compat/compat */
   : function isArrayBufferView(value) {
@@ -113,11 +108,11 @@ const kIsSet = 2;
 const kIsMap = 3;
 
 // Check if they have the same source and flags
-function areSimilarRegExps(a, b) {
+const areSimilarRegExps = function areSimilarRegExps(a, b) {
   return a.source === b.source && a.flags === b.flags;
-}
+};
 
-function areSimilarFloatArrays(a, b) {
+const areSimilarFloatArrays = function areSimilarFloatArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
@@ -129,23 +124,23 @@ function areSimilarFloatArrays(a, b) {
   }
 
   return true;
-}
+};
 
-function areSimilarTypedArrays(a, b) {
+const areSimilarTypedArrays = function areSimilarTypedArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
 
   /* eslint-disable-next-line compat/compat */
   return isArrayBufferEqual(a.buffer, new Uint8Array(b.buffer, b.byteOffset, b.byteLength).buffer);
-}
+};
 
-function areEqualArrayBuffers(buf1, buf2) {
+const areEqualArrayBuffers = function areEqualArrayBuffers(buf1, buf2) {
   /* eslint-disable-next-line compat/compat */
   return buf1.byteLength === buf2.byteLength && isArrayBufferEqual(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
-}
+};
 
-function setHasEqualElement(set, val1, strict, memo) {
+const setHasEqualElement = function setHasEqualElement(set, val1, strict, memo) {
   // Go looking.
   const setIter = set.values();
   let next = setIter.next();
@@ -163,17 +158,17 @@ function setHasEqualElement(set, val1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function getEnumerables(val, keys) {
+const getEnumerables = function getEnumerables(val, keys) {
   return arrayFilter(keys, (k) => propertyIsEnumerable(val, k));
-}
+};
 
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
 // Sadly it is not possible to detect corresponding values properly in case the
 // type is a string, number, bigint or boolean. The reason is that those values
 // can match lots of different string values (e.g., 1n == '+00001').
-function findLooseMatchingPrimitives(prim) {
+const findLooseMatchingPrimitives = function findLooseMatchingPrimitives(prim) {
   let $prim = prim;
   switch (typeof $prim) {
     case 'undefined':
@@ -201,9 +196,10 @@ function findLooseMatchingPrimitives(prim) {
   }
 
   return true;
-}
+};
 
-function setMightHaveLoosePrim(a, b, prim) {
+const setMightHaveLoosePrim = function setMightHaveLoosePrim(...args) {
+  const [a, b, prim] = args;
   const altValue = findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
@@ -211,9 +207,10 @@ function setMightHaveLoosePrim(a, b, prim) {
   }
 
   return b.has(altValue) && !a.has(altValue);
-}
+};
 
-function mapMightHaveLoosePrim(a, b, prim, item, memo) {
+const mapMightHaveLoosePrim = function mapMightHaveLoosePrim(...args) {
+  const [a, b, prim, item, memo] = args;
   const altValue = findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
@@ -227,7 +224,7 @@ function mapMightHaveLoosePrim(a, b, prim, item, memo) {
   }
 
   return !a.has(altValue) && innerDeepEqual(item, curB, false, memo);
-}
+};
 
 function setEquiv(a, b, strict, memo) {
   // This is a lazily initiated Set of entries which have to be compared
@@ -297,7 +294,8 @@ function setEquiv(a, b, strict, memo) {
   return true;
 }
 
-function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
+const mapHasEqualEntry = function mapHasEqualEntry(...args) {
+  const [set, map, key1, item1, strict, memo] = args;
   // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
@@ -316,9 +314,10 @@ function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function mapEquiv(a, b, strict, memo) {
+const mapEquiv = function mapEquiv(...args) {
+  const [a, b, strict, memo] = args;
   /** @type {Set} */
   let set = null;
 
@@ -385,9 +384,9 @@ function mapEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
-function isEqualBoxedPrimitive(val1, val2) {
+const isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   if (isNumberObject(val1)) {
     return isNumberObject(val2) && objectIs(NumberValueOf.call(val1), NumberValueOf.call(val2));
   }
@@ -405,9 +404,10 @@ function isEqualBoxedPrimitive(val1, val2) {
   }
 
   return isSymbolObject(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
-}
+};
 
-function objEquiv(a, b, strict, keys, memos, iterationType) {
+const objEquiv = function objEquiv(...args) {
+  const [a, b, strict, keys, memos, iterationType] = args;
   // Sets and maps don't have their entries accessible via normal object
   // properties.
   let i = 0;
@@ -455,9 +455,10 @@ function objEquiv(a, b, strict, keys, memos, iterationType) {
   }
 
   return true;
-}
+};
 
-function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
+const keyCheck = function keyCheck(...args) {
+  const [val1, val2, strict, memos, iterationType, aKeys] = args;
   let $memos = memos;
   let $aKeys = aKeys;
 
@@ -560,7 +561,7 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
   $memos.val2.delete(val2);
 
   return areEq;
-}
+};
 
 // Notes: Type tags are historical [[Class]] properties that can be set by
 // FunctionTemplate::SetClassName() in C++ or Symbol.toStringTag in JS
@@ -581,7 +582,9 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
 // a) The same built-in type tags
 // b) The same prototypes.
 
-innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
+innerDeepEqual = function $innerDeepEqual(...args) {
+  const [val1, val2, strict, memos] = args;
+
   // All identical values are equivalent, as determined by ===.
   if (val1 === val2) {
     if (val1 !== 0) {

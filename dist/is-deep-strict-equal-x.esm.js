@@ -69,8 +69,7 @@ var hasBigInt = isBigIntObject(bigInt48);
 var BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
 var BooleanValueOf = true.valueOf;
 var DateGetTime = new Date().getTime;
-var NumberValueOf = 0 .valueOf; // const ObjectPrototype = Object.prototype;
-
+var NumberValueOf = 0 .valueOf;
 var StringValueOf = EMPTY_STRING.valueOf;
 /* eslint-disable-next-line compat/compat */
 
@@ -136,11 +135,11 @@ var kIsArray = 1;
 var kIsSet = 2;
 var kIsMap = 3; // Check if they have the same source and flags
 
-function areSimilarRegExps(a, b) {
+var areSimilarRegExps = function areSimilarRegExps(a, b) {
   return a.source === b.source && a.flags === b.flags;
-}
+};
 
-function areSimilarFloatArrays(a, b) {
+var areSimilarFloatArrays = function areSimilarFloatArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
@@ -152,9 +151,9 @@ function areSimilarFloatArrays(a, b) {
   }
 
   return true;
-}
+};
 
-function areSimilarTypedArrays(a, b) {
+var areSimilarTypedArrays = function areSimilarTypedArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
@@ -162,14 +161,14 @@ function areSimilarTypedArrays(a, b) {
 
 
   return isArrayBufferEqual(a.buffer, new Uint8Array(b.buffer, b.byteOffset, b.byteLength).buffer);
-}
+};
 
-function areEqualArrayBuffers(buf1, buf2) {
+var areEqualArrayBuffers = function areEqualArrayBuffers(buf1, buf2) {
   /* eslint-disable-next-line compat/compat */
   return buf1.byteLength === buf2.byteLength && isArrayBufferEqual(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
-}
+};
 
-function setHasEqualElement(set, val1, strict, memo) {
+var setHasEqualElement = function setHasEqualElement(set, val1, strict, memo) {
   // Go looking.
   var setIter = set.values();
   var next = setIter.next();
@@ -187,9 +186,9 @@ function setHasEqualElement(set, val1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function getEnumerables(val, keys) {
+var getEnumerables = function getEnumerables(val, keys) {
   var _this2 = this;
 
   return arrayFilter(keys, function (k) {
@@ -197,13 +196,13 @@ function getEnumerables(val, keys) {
 
     return propertyIsEnumerable(val, k);
   }.bind(this));
-} // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
+}; // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
 // Sadly it is not possible to detect corresponding values properly in case the
 // type is a string, number, bigint or boolean. The reason is that those values
 // can match lots of different string values (e.g., 1n == '+00001').
 
 
-function findLooseMatchingPrimitives(prim) {
+var findLooseMatchingPrimitives = function findLooseMatchingPrimitives(prim) {
   var $prim = prim;
 
   switch (_typeof($prim)) {
@@ -234,9 +233,16 @@ function findLooseMatchingPrimitives(prim) {
   }
 
   return true;
-}
+};
 
-function setMightHaveLoosePrim(a, b, prim) {
+var setMightHaveLoosePrim = function setMightHaveLoosePrim() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var a = args[0],
+      b = args[1],
+      prim = args[2];
   var altValue = findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
@@ -244,9 +250,18 @@ function setMightHaveLoosePrim(a, b, prim) {
   }
 
   return b.has(altValue) && !a.has(altValue);
-}
+};
 
-function mapMightHaveLoosePrim(a, b, prim, item, memo) {
+var mapMightHaveLoosePrim = function mapMightHaveLoosePrim() {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  var a = args[0],
+      b = args[1],
+      prim = args[2],
+      item = args[3],
+      memo = args[4];
   var altValue = findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
@@ -260,7 +275,7 @@ function mapMightHaveLoosePrim(a, b, prim, item, memo) {
   }
 
   return !a.has(altValue) && innerDeepEqual(item, curB, false, memo);
-}
+};
 
 function setEquiv(a, b, strict, memo) {
   // This is a lazily initiated Set of entries which have to be compared
@@ -331,10 +346,20 @@ function setEquiv(a, b, strict, memo) {
   return true;
 }
 
-function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
-  // To be able to handle cases like:
+var mapHasEqualEntry = function mapHasEqualEntry() {
+  for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    args[_key3] = arguments[_key3];
+  }
+
+  var set = args[0],
+      map = args[1],
+      key1 = args[2],
+      item1 = args[3],
+      strict = args[4],
+      memo = args[5]; // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
+
   var setIter = set.values();
   var next = setIter.next();
 
@@ -350,10 +375,19 @@ function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function mapEquiv(a, b, strict, memo) {
+var mapEquiv = function mapEquiv() {
+  for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    args[_key4] = arguments[_key4];
+  }
+
+  var a = args[0],
+      b = args[1],
+      strict = args[2],
+      memo = args[3];
   /** @type {Set} */
+
   var set = null;
   var setIterA = a.entries();
   var nextA = setIterA.next();
@@ -420,9 +454,9 @@ function mapEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
-function isEqualBoxedPrimitive(val1, val2) {
+var isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   if (isNumberObject(val1)) {
     return isNumberObject(val2) && objectIs(NumberValueOf.call(val1), NumberValueOf.call(val2));
   }
@@ -440,11 +474,21 @@ function isEqualBoxedPrimitive(val1, val2) {
   }
 
   return isSymbolObject(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
-}
+};
 
-function objEquiv(a, b, strict, keys, memos, iterationType) {
-  // Sets and maps don't have their entries accessible via normal object
+var objEquiv = function objEquiv() {
+  for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    args[_key5] = arguments[_key5];
+  }
+
+  var a = args[0],
+      b = args[1],
+      strict = args[2],
+      keys = args[3],
+      memos = args[4],
+      iterationType = args[5]; // Sets and maps don't have their entries accessible via normal object
   // properties.
+
   var i = 0;
 
   if (iterationType === kIsSet) {
@@ -483,17 +527,27 @@ function objEquiv(a, b, strict, keys, memos, iterationType) {
 
 
   for (i = 0; i < keys.length; i += 1) {
-    var _key = keys[i];
+    var _key6 = keys[i];
 
-    if (!innerDeepEqual(a[_key], b[_key], strict, memos)) {
+    if (!innerDeepEqual(a[_key6], b[_key6], strict, memos)) {
       return false;
     }
   }
 
   return true;
-}
+};
 
-function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
+var keyCheck = function keyCheck() {
+  for (var _len6 = arguments.length, args = new Array(_len6), _key7 = 0; _key7 < _len6; _key7++) {
+    args[_key7] = arguments[_key7];
+  }
+
+  var val1 = args[0],
+      val2 = args[1],
+      strict = args[2],
+      memos = args[3],
+      iterationType = args[4],
+      aKeys = args[5];
   var $memos = memos;
   var $aKeys = aKeys; // For all remaining Object pairs, including Array, objects and Maps,
   // equivalence is determined by having:
@@ -590,7 +644,7 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
   $memos.val1.delete(val1);
   $memos.val2.delete(val2);
   return areEq;
-} // Notes: Type tags are historical [[Class]] properties that can be set by
+}; // Notes: Type tags are historical [[Class]] properties that can be set by
 // FunctionTemplate::SetClassName() in C++ or Symbol.toStringTag in JS
 // and retrieved using Object.prototype.toString.call(obj) in JS
 // See https://tc39.github.io/ecma262/#sec-object.prototype.tostring
@@ -610,8 +664,16 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
 // b) The same prototypes.
 
 
-innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
-  // All identical values are equivalent, as determined by ===.
+innerDeepEqual = function $innerDeepEqual() {
+  for (var _len7 = arguments.length, args = new Array(_len7), _key8 = 0; _key8 < _len7; _key8++) {
+    args[_key8] = arguments[_key8];
+  }
+
+  var val1 = args[0],
+      val2 = args[1],
+      strict = args[2],
+      memos = args[3]; // All identical values are equivalent, as determined by ===.
+
   if (val1 === val2) {
     if (val1 !== 0) {
       return true;

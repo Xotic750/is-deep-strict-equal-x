@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-27T22:17:40.789Z",
+  "date": "2019-07-29T13:01:41.833Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "5044278cb0e257bebdb0",
+  "hash": "c3bb91feae4501927572",
   "license": "MIT",
   "version": "1.0.11"
 }
@@ -6572,8 +6572,7 @@ var hasBigInt = is_bigint_default()(bigInt48);
 var BigIntValueOf = hasBigInt ? bigInt48.valueOf : is_deep_strict_equal_x_esm_UNDEFINED;
 var BooleanValueOf = true.valueOf;
 var DateGetTime = new Date().getTime;
-var NumberValueOf = 0 .valueOf; // const ObjectPrototype = Object.prototype;
-
+var NumberValueOf = 0 .valueOf;
 var StringValueOf = is_deep_strict_equal_x_esm_EMPTY_STRING.valueOf;
 /* eslint-disable-next-line compat/compat */
 
@@ -6639,11 +6638,11 @@ var kIsArray = 1;
 var kIsSet = 2;
 var kIsMap = 3; // Check if they have the same source and flags
 
-function areSimilarRegExps(a, b) {
+var areSimilarRegExps = function areSimilarRegExps(a, b) {
   return a.source === b.source && a.flags === b.flags;
-}
+};
 
-function areSimilarFloatArrays(a, b) {
+var areSimilarFloatArrays = function areSimilarFloatArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
@@ -6655,9 +6654,9 @@ function areSimilarFloatArrays(a, b) {
   }
 
   return true;
-}
+};
 
-function areSimilarTypedArrays(a, b) {
+var is_deep_strict_equal_x_esm_areSimilarTypedArrays = function areSimilarTypedArrays(a, b) {
   if (a.byteLength !== b.byteLength) {
     return false;
   }
@@ -6665,14 +6664,14 @@ function areSimilarTypedArrays(a, b) {
 
 
   return arraybuffer_equal_default()(a.buffer, new Uint8Array(b.buffer, b.byteOffset, b.byteLength).buffer);
-}
+};
 
-function areEqualArrayBuffers(buf1, buf2) {
+var is_deep_strict_equal_x_esm_areEqualArrayBuffers = function areEqualArrayBuffers(buf1, buf2) {
   /* eslint-disable-next-line compat/compat */
   return buf1.byteLength === buf2.byteLength && arraybuffer_equal_default()(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
-}
+};
 
-function setHasEqualElement(set, val1, strict, memo) {
+var setHasEqualElement = function setHasEqualElement(set, val1, strict, memo) {
   // Go looking.
   var setIter = set.values();
   var next = setIter.next();
@@ -6690,9 +6689,9 @@ function setHasEqualElement(set, val1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function getEnumerables(val, keys) {
+var is_deep_strict_equal_x_esm_getEnumerables = function getEnumerables(val, keys) {
   var _this2 = this;
 
   return array_filter_x_esm(keys, function (k) {
@@ -6700,13 +6699,13 @@ function getEnumerables(val, keys) {
 
     return property_is_enumerable_x_esm(val, k);
   }.bind(this));
-} // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
+}; // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
 // Sadly it is not possible to detect corresponding values properly in case the
 // type is a string, number, bigint or boolean. The reason is that those values
 // can match lots of different string values (e.g., 1n == '+00001').
 
 
-function findLooseMatchingPrimitives(prim) {
+var is_deep_strict_equal_x_esm_findLooseMatchingPrimitives = function findLooseMatchingPrimitives(prim) {
   var $prim = prim;
 
   switch (is_deep_strict_equal_x_esm_typeof($prim)) {
@@ -6737,20 +6736,36 @@ function findLooseMatchingPrimitives(prim) {
   }
 
   return true;
-}
+};
 
-function setMightHaveLoosePrim(a, b, prim) {
-  var altValue = findLooseMatchingPrimitives(prim);
+var setMightHaveLoosePrim = function setMightHaveLoosePrim() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var a = args[0],
+      b = args[1],
+      prim = args[2];
+  var altValue = is_deep_strict_equal_x_esm_findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
     return altValue;
   }
 
   return b.has(altValue) && !a.has(altValue);
-}
+};
 
-function mapMightHaveLoosePrim(a, b, prim, item, memo) {
-  var altValue = findLooseMatchingPrimitives(prim);
+var mapMightHaveLoosePrim = function mapMightHaveLoosePrim() {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  var a = args[0],
+      b = args[1],
+      prim = args[2],
+      item = args[3],
+      memo = args[4];
+  var altValue = is_deep_strict_equal_x_esm_findLooseMatchingPrimitives(prim);
 
   if (altValue != null) {
     return altValue;
@@ -6763,7 +6778,7 @@ function mapMightHaveLoosePrim(a, b, prim, item, memo) {
   }
 
   return !a.has(altValue) && innerDeepEqual(item, curB, false, memo);
-}
+};
 
 function setEquiv(a, b, strict, memo) {
   // This is a lazily initiated Set of entries which have to be compared
@@ -6834,10 +6849,20 @@ function setEquiv(a, b, strict, memo) {
   return true;
 }
 
-function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
-  // To be able to handle cases like:
+var mapHasEqualEntry = function mapHasEqualEntry() {
+  for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    args[_key3] = arguments[_key3];
+  }
+
+  var set = args[0],
+      map = args[1],
+      key1 = args[2],
+      item1 = args[3],
+      strict = args[4],
+      memo = args[5]; // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
+
   var setIter = set.values();
   var next = setIter.next();
 
@@ -6853,10 +6878,19 @@ function mapHasEqualEntry(set, map, key1, item1, strict, memo) {
   }
 
   return false;
-}
+};
 
-function mapEquiv(a, b, strict, memo) {
+var is_deep_strict_equal_x_esm_mapEquiv = function mapEquiv() {
+  for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    args[_key4] = arguments[_key4];
+  }
+
+  var a = args[0],
+      b = args[1],
+      strict = args[2],
+      memo = args[3];
   /** @type {Set} */
+
   var set = null;
   var setIterA = a.entries();
   var nextA = setIterA.next();
@@ -6923,9 +6957,9 @@ function mapEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
-function isEqualBoxedPrimitive(val1, val2) {
+var is_deep_strict_equal_x_esm_isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   if (is_number_object_default()(val1)) {
     return is_number_object_default()(val2) && same_value_x_esm(NumberValueOf.call(val1), NumberValueOf.call(val2));
   }
@@ -6943,11 +6977,21 @@ function isEqualBoxedPrimitive(val1, val2) {
   }
 
   return is_symbol_default()(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
-}
+};
 
-function objEquiv(a, b, strict, keys, memos, iterationType) {
-  // Sets and maps don't have their entries accessible via normal object
+var is_deep_strict_equal_x_esm_objEquiv = function objEquiv() {
+  for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    args[_key5] = arguments[_key5];
+  }
+
+  var a = args[0],
+      b = args[1],
+      strict = args[2],
+      keys = args[3],
+      memos = args[4],
+      iterationType = args[5]; // Sets and maps don't have their entries accessible via normal object
   // properties.
+
   var i = 0;
 
   if (iterationType === kIsSet) {
@@ -6955,7 +6999,7 @@ function objEquiv(a, b, strict, keys, memos, iterationType) {
       return false;
     }
   } else if (iterationType === kIsMap) {
-    if (!mapEquiv(a, b, strict, memos)) {
+    if (!is_deep_strict_equal_x_esm_mapEquiv(a, b, strict, memos)) {
       return false;
     }
   } else if (iterationType === kIsArray) {
@@ -6986,17 +7030,27 @@ function objEquiv(a, b, strict, keys, memos, iterationType) {
 
 
   for (i = 0; i < keys.length; i += 1) {
-    var _key = keys[i];
+    var _key6 = keys[i];
 
-    if (!innerDeepEqual(a[_key], b[_key], strict, memos)) {
+    if (!innerDeepEqual(a[_key6], b[_key6], strict, memos)) {
       return false;
     }
   }
 
   return true;
-}
+};
 
-function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
+var is_deep_strict_equal_x_esm_keyCheck = function keyCheck() {
+  for (var _len6 = arguments.length, args = new Array(_len6), _key7 = 0; _key7 < _len6; _key7++) {
+    args[_key7] = arguments[_key7];
+  }
+
+  var val1 = args[0],
+      val2 = args[1],
+      strict = args[2],
+      memos = args[3],
+      iterationType = args[4],
+      aKeys = args[5];
   var $memos = memos;
   var $aKeys = aKeys; // For all remaining Object pairs, including Array, objects and Maps,
   // equivalence is determined by having:
@@ -7047,13 +7101,13 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
 
       var symbolKeysB = get_own_property_symbols_x_esm(val2);
 
-      if (symbolKeysA.length !== symbolKeysB.length && getEnumerables(val2, symbolKeysB).length !== count) {
+      if (symbolKeysA.length !== symbolKeysB.length && is_deep_strict_equal_x_esm_getEnumerables(val2, symbolKeysB).length !== count) {
         return false;
       }
     } else {
       var _symbolKeysB = get_own_property_symbols_x_esm(val2);
 
-      if (_symbolKeysB.length !== 0 && getEnumerables(val2, _symbolKeysB).length !== 0) {
+      if (_symbolKeysB.length !== 0 && is_deep_strict_equal_x_esm_getEnumerables(val2, _symbolKeysB).length !== 0) {
         return false;
       }
     }
@@ -7089,11 +7143,11 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
 
   $memos.val1.set(val1, $memos.position);
   $memos.val2.set(val2, $memos.position);
-  var areEq = objEquiv(val1, val2, strict, $aKeys, $memos, iterationType);
+  var areEq = is_deep_strict_equal_x_esm_objEquiv(val1, val2, strict, $aKeys, $memos, iterationType);
   $memos.val1.delete(val1);
   $memos.val2.delete(val2);
   return areEq;
-} // Notes: Type tags are historical [[Class]] properties that can be set by
+}; // Notes: Type tags are historical [[Class]] properties that can be set by
 // FunctionTemplate::SetClassName() in C++ or Symbol.toStringTag in JS
 // and retrieved using Object.prototype.toString.call(obj) in JS
 // See https://tc39.github.io/ecma262/#sec-object.prototype.tostring
@@ -7113,8 +7167,16 @@ function keyCheck(val1, val2, strict, memos, iterationType, aKeys) {
 // b) The same prototypes.
 
 
-innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
-  // All identical values are equivalent, as determined by ===.
+innerDeepEqual = function $innerDeepEqual() {
+  for (var _len7 = arguments.length, args = new Array(_len7), _key8 = 0; _key8 < _len7; _key8++) {
+    args[_key8] = arguments[_key8];
+  }
+
+  var val1 = args[0],
+      val2 = args[1],
+      strict = args[2],
+      memos = args[3]; // All identical values are equivalent, as determined by ===.
+
   if (val1 === val2) {
     if (val1 !== 0) {
       return true;
@@ -7175,11 +7237,11 @@ innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsArray, keys1);
+    return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kIsArray, keys1);
   }
 
   if (val1Tag === '[object Object]') {
-    return keyCheck(val1, val2, strict, memos, kNoIterator);
+    return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kNoIterator);
   }
 
   if (is_date_object_default()(val1)) {
@@ -7201,7 +7263,7 @@ innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
       if (!areSimilarFloatArrays(val1, val2)) {
         return false;
       }
-    } else if (!areSimilarTypedArrays(val1, val2)) {
+    } else if (!is_deep_strict_equal_x_esm_areSimilarTypedArrays(val1, val2)) {
       return false;
     } // Buffer.compare returns true, so val1.length === val2.length. If they both
     // only contain numeric keys, we don't need to exam further than checking
@@ -7220,28 +7282,28 @@ innerDeepEqual = function _innerDeepEqual(val1, val2, strict, memos) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kNoIterator, _keys);
+    return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kNoIterator, _keys);
   } else if (is_set_x_esm(val1)) {
     if (!is_set_x_esm(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsSet);
+    return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kIsSet);
   } else if (is_map_x_esm(val1)) {
     if (!is_map_x_esm(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsMap);
+    return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kIsMap);
   } else if (is_array_buffer_x_esm(val1)) {
-    if (!areEqualArrayBuffers(val1, val2)) {
+    if (!is_deep_strict_equal_x_esm_areEqualArrayBuffers(val1, val2)) {
       return false;
     }
-  } else if (implementation_default()(val1) && !isEqualBoxedPrimitive(val1, val2)) {
+  } else if (implementation_default()(val1) && !is_deep_strict_equal_x_esm_isEqualBoxedPrimitive(val1, val2)) {
     return false;
   }
 
-  return keyCheck(val1, val2, strict, memos, kNoIterator);
+  return is_deep_strict_equal_x_esm_keyCheck(val1, val2, strict, memos, kNoIterator);
 }; // noinspection JSUnusedGlobalSymbols
 
 
