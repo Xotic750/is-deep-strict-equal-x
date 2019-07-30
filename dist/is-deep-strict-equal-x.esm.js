@@ -8,16 +8,6 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 import hasOwnProperty from 'has-own-property-x';
 import propertyIsEnumerable from 'property-is-enumerable-x';
 import objectToString from 'to-string-tag-x';
@@ -47,24 +37,32 @@ import isIndex from 'is-index-x';
 import { MapConstructor, SetConstructor } from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
+import attempt from 'attempt-x';
+var _ref = [],
+    concat = _ref.concat,
+    push = _ref.push;
 /* eslint-disable-next-line no-void */
 
 var UNDEFINED = void 0;
 var EMPTY_STRING = '';
 var $innerDeepEqual;
 
-var bigInt48 = function getBigInt48() {
+var getBigInt48 = function getBigInt48() {
   if (typeof BigInt === 'function') {
-    try {
+    var res = attempt(function attemptee() {
       /* eslint-disable-next-line babel/new-cap,no-undef,compat/compat */
       return BigInt(48);
-    } catch (ignore) {// empty
+    });
+
+    if (res.threw === false) {
+      return res.value;
     }
   }
 
   return UNDEFINED;
-}();
+};
 
+var bigInt48 = getBigInt48();
 var hasBigInt = isBigIntObject(bigInt48);
 var BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
 var BooleanValueOf = true.valueOf;
@@ -75,16 +73,23 @@ var StringValueOf = EMPTY_STRING.valueOf;
 
 var SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
 
-var hasArrayBuffer = typeof ArrayBuffer === 'function' && function testArrayBuffer() {
-  try {
-    /* eslint-disable-next-line compat/compat */
-    return isAnyArrayBuffer(new ArrayBuffer(4));
-  } catch (ignore) {
-    return false;
-  }
-}();
-/* eslint-disable-next-line compat/compat */
+var testArrayBuffer = function testArrayBuffer() {
+  if (typeof ArrayBuffer === 'function') {
+    var res = attempt(function attemptee() {
+      /* eslint-disable-next-line compat/compat */
+      return isAnyArrayBuffer(new ArrayBuffer(4));
+    });
 
+    if (res.threw === false) {
+      return res.value;
+    }
+  }
+
+  return false;
+};
+
+var hasArrayBuffer = testArrayBuffer();
+/* eslint-disable-next-line compat/compat */
 
 var hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
 var isArrayBufferView = hasIsView ? ArrayBuffer.isView
@@ -111,8 +116,6 @@ var ONLY_ENUMERABLE = 2; // const ONLY_CONFIGURABLE = 4;
 var SKIP_SYMBOLS = 16;
 
 var getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter) {
-  var _this = this;
-
   // noinspection JSBitwiseOperatorUsage
   var names = filter & ONLY_ENUMERABLE
   /* eslint-disable-line no-bitwise */
@@ -121,11 +124,9 @@ var getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter) 
   var symbols = filter & SKIP_SYMBOLS
   /* eslint-disable-line no-bitwise */
   ? [] : getOwnPropertySymbols(value);
-  return arrayFilter([].concat(_toConsumableArray(names), _toConsumableArray(symbols)), function (key) {
-    _newArrowCheck(this, _this);
-
+  return arrayFilter(concat.call([], names, symbols), function predicate(key) {
     return !isIndex(key);
-  }.bind(this));
+  });
 };
 
 var kStrict = true;
@@ -195,13 +196,9 @@ var setHasEqualElement = function setHasEqualElement(args) {
 };
 
 var getEnumerables = function getEnumerables(val, keys) {
-  var _this2 = this;
-
-  return arrayFilter(keys, function (k) {
-    _newArrowCheck(this, _this2);
-
+  return arrayFilter(keys, function predicate(k) {
     return propertyIsEnumerable(val, k);
-  }.bind(this));
+  });
 }; // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
 // Sadly it is not possible to detect corresponding values properly in case the
 // type is a string, number, bigint or boolean. The reason is that those values
@@ -279,11 +276,16 @@ var mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
   return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
 };
 
-function setEquiv(a, b, strict, memo) {
-  // This is a lazily initiated Set of entries which have to be compared
-  // pairwise.
+var setEquiv = function setEquiv(args) {
+  var _args4 = _slicedToArray(args, 4),
+      a = _args4[0],
+      b = _args4[1],
+      strict = _args4[2],
+      memo = _args4[3]; // This is a lazily initiated Set of entries which have to be compared pairwise.
 
   /** @type {Set} */
+
+
   var set = null;
   var setIterA = a.values();
   var nextA = setIterA.next();
@@ -346,16 +348,16 @@ function setEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
 var mapHasEqualEntry = function mapHasEqualEntry(args) {
-  var _args4 = _slicedToArray(args, 6),
-      set = _args4[0],
-      map = _args4[1],
-      key1 = _args4[2],
-      item1 = _args4[3],
-      strict = _args4[4],
-      memo = _args4[5]; // To be able to handle cases like:
+  var _args5 = _slicedToArray(args, 6),
+      set = _args5[0],
+      map = _args5[1],
+      key1 = _args5[2],
+      item1 = _args5[3],
+      strict = _args5[4],
+      memo = _args5[5]; // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
 
@@ -378,11 +380,11 @@ var mapHasEqualEntry = function mapHasEqualEntry(args) {
 };
 
 var mapEquiv = function mapEquiv(args) {
-  var _args5 = _slicedToArray(args, 4),
-      a = _args5[0],
-      b = _args5[1],
-      strict = _args5[2],
-      memo = _args5[3];
+  var _args6 = _slicedToArray(args, 4),
+      a = _args6[0],
+      b = _args6[1],
+      strict = _args6[2],
+      memo = _args6[3];
   /** @type {Set} */
 
 
@@ -475,20 +477,20 @@ var isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
 };
 
 var objEquiv = function objEquiv(args) {
-  var _args6 = _slicedToArray(args, 6),
-      a = _args6[0],
-      b = _args6[1],
-      strict = _args6[2],
-      keys = _args6[3],
-      memos = _args6[4],
-      iterationType = _args6[5]; // Sets and maps don't have their entries accessible via normal object
+  var _args7 = _slicedToArray(args, 6),
+      a = _args7[0],
+      b = _args7[1],
+      strict = _args7[2],
+      keys = _args7[3],
+      memos = _args7[4],
+      iterationType = _args7[5]; // Sets and maps don't have their entries accessible via normal object
   // properties.
 
 
   var i = 0;
 
   if (iterationType === kIsSet) {
-    if (!setEquiv(a, b, strict, memos)) {
+    if (!setEquiv([a, b, strict, memos])) {
       return false;
     }
   } else if (iterationType === kIsMap) {
@@ -534,13 +536,13 @@ var objEquiv = function objEquiv(args) {
 };
 
 var keyCheck = function keyCheck(args) {
-  var _args7 = _slicedToArray(args, 6),
-      val1 = _args7[0],
-      val2 = _args7[1],
-      strict = _args7[2],
-      memos = _args7[3],
-      iterationType = _args7[4],
-      aKeys = _args7[5];
+  var _args8 = _slicedToArray(args, 6),
+      val1 = _args8[0],
+      val2 = _args8[1],
+      strict = _args8[2],
+      memos = _args8[3],
+      iterationType = _args8[4],
+      aKeys = _args8[5];
 
   var $memos = memos;
   var $aKeys = aKeys; // For all remaining Object pairs, including Array, objects and Maps,
@@ -583,7 +585,7 @@ var keyCheck = function keyCheck(args) {
             return false;
           }
 
-          $aKeys.push(key);
+          push.call($aKeys, key);
           count += 1;
         } else if (propertyIsEnumerable(val2, key)) {
           return false;
@@ -659,11 +661,11 @@ var keyCheck = function keyCheck(args) {
 
 
 $innerDeepEqual = function innerDeepEqual(args) {
-  var _args8 = _slicedToArray(args, 4),
-      val1 = _args8[0],
-      val2 = _args8[1],
-      strict = _args8[2],
-      memos = _args8[3]; // All identical values are equivalent, as determined by ===.
+  var _args9 = _slicedToArray(args, 4),
+      val1 = _args9[0],
+      val2 = _args9[1],
+      strict = _args9[2],
+      memos = _args9[3]; // All identical values are equivalent, as determined by ===.
 
 
   if (val1 === val2) {

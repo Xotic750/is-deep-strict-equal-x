@@ -27,25 +27,30 @@ import isIndex from 'is-index-x';
 import {MapConstructor, SetConstructor} from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
+import attempt from 'attempt-x';
 
+const {concat, push} = [];
 /* eslint-disable-next-line no-void */
 const UNDEFINED = void 0;
 const EMPTY_STRING = '';
 let $innerDeepEqual;
 
-const bigInt48 = (function getBigInt48() {
+const getBigInt48 = function getBigInt48() {
   if (typeof BigInt === 'function') {
-    try {
+    const res = attempt(function attemptee() {
       /* eslint-disable-next-line babel/new-cap,no-undef,compat/compat */
       return BigInt(48);
-    } catch (ignore) {
-      // empty
+    });
+
+    if (res.threw === false) {
+      return res.value;
     }
   }
 
   return UNDEFINED;
-})();
+};
 
+const bigInt48 = getBigInt48();
 const hasBigInt = isBigIntObject(bigInt48);
 const BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
 const BooleanValueOf = true.valueOf;
@@ -54,16 +59,22 @@ const NumberValueOf = (0).valueOf;
 const StringValueOf = EMPTY_STRING.valueOf;
 /* eslint-disable-next-line compat/compat */
 const SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
-const hasArrayBuffer =
-  typeof ArrayBuffer === 'function' &&
-  (function testArrayBuffer() {
-    try {
+const testArrayBuffer = function testArrayBuffer() {
+  if (typeof ArrayBuffer === 'function') {
+    const res = attempt(function attemptee() {
       /* eslint-disable-next-line compat/compat */
       return isAnyArrayBuffer(new ArrayBuffer(4));
-    } catch (ignore) {
-      return false;
+    });
+
+    if (res.threw === false) {
+      return res.value;
     }
-  })();
+  }
+
+  return false;
+};
+
+const hasArrayBuffer = testArrayBuffer();
 
 /* eslint-disable-next-line compat/compat */
 const hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
@@ -96,7 +107,9 @@ const getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter
   // noinspection JSBitwiseOperatorUsage
   const symbols = filter & SKIP_SYMBOLS /* eslint-disable-line no-bitwise */ ? [] : getOwnPropertySymbols(value);
 
-  return arrayFilter([...names, ...symbols], (key) => !isIndex(key));
+  return arrayFilter(concat.call([], names, symbols), function predicate(key) {
+    return !isIndex(key);
+  });
 };
 
 const kStrict = true;
@@ -162,7 +175,9 @@ const setHasEqualElement = function setHasEqualElement(args) {
 };
 
 const getEnumerables = function getEnumerables(val, keys) {
-  return arrayFilter(keys, (k) => propertyIsEnumerable(val, k));
+  return arrayFilter(keys, function predicate(k) {
+    return propertyIsEnumerable(val, k);
+  });
 };
 
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
@@ -227,9 +242,9 @@ const mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
   return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
 };
 
-function setEquiv(a, b, strict, memo) {
-  // This is a lazily initiated Set of entries which have to be compared
-  // pairwise.
+const setEquiv = function setEquiv(args) {
+  const [a, b, strict, memo] = args;
+  // This is a lazily initiated Set of entries which have to be compared pairwise.
   /** @type {Set} */
   let set = null;
   const setIterA = a.values();
@@ -293,7 +308,7 @@ function setEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
 const mapHasEqualEntry = function mapHasEqualEntry(args) {
   const [set, map, key1, item1, strict, memo] = args;
@@ -414,7 +429,7 @@ const objEquiv = function objEquiv(args) {
   let i = 0;
 
   if (iterationType === kIsSet) {
-    if (!setEquiv(a, b, strict, memos)) {
+    if (!setEquiv([a, b, strict, memos])) {
       return false;
     }
   } else if (iterationType === kIsMap) {
@@ -501,7 +516,7 @@ const keyCheck = function keyCheck(args) {
             return false;
           }
 
-          $aKeys.push(key);
+          push.call($aKeys, key);
           count += 1;
         } else if (propertyIsEnumerable(val2, key)) {
           return false;

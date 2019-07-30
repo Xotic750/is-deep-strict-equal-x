@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-30T23:22:56.252Z",
+  "date": "2019-07-30T23:54:22.221Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "9f926b6c1ed399260779",
+  "hash": "eab0122b7228704d584e",
   "license": "MIT",
   "version": "1.0.11"
 }
@@ -6511,15 +6511,6 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function is_deep_strict_equal_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 
 
@@ -6550,24 +6541,31 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 
+var is_deep_strict_equal_x_esm_ref = [],
+    is_deep_strict_equal_x_esm_concat = is_deep_strict_equal_x_esm_ref.concat,
+    push = is_deep_strict_equal_x_esm_ref.push;
 /* eslint-disable-next-line no-void */
 
 var is_deep_strict_equal_x_esm_UNDEFINED = void 0;
 var is_deep_strict_equal_x_esm_EMPTY_STRING = '';
 var $innerDeepEqual;
 
-var bigInt48 = function getBigInt48() {
+var is_deep_strict_equal_x_esm_getBigInt48 = function getBigInt48() {
   if (typeof BigInt === 'function') {
-    try {
+    var res = attempt_x_esm(function attemptee() {
       /* eslint-disable-next-line babel/new-cap,no-undef,compat/compat */
       return BigInt(48);
-    } catch (ignore) {// empty
+    });
+
+    if (res.threw === false) {
+      return res.value;
     }
   }
 
   return is_deep_strict_equal_x_esm_UNDEFINED;
-}();
+};
 
+var bigInt48 = is_deep_strict_equal_x_esm_getBigInt48();
 var hasBigInt = is_bigint_default()(bigInt48);
 var BigIntValueOf = hasBigInt ? bigInt48.valueOf : is_deep_strict_equal_x_esm_UNDEFINED;
 var BooleanValueOf = true.valueOf;
@@ -6578,16 +6576,23 @@ var StringValueOf = is_deep_strict_equal_x_esm_EMPTY_STRING.valueOf;
 
 var SymbolValueOf = has_symbol_support_x_esm ? Symbol(is_deep_strict_equal_x_esm_EMPTY_STRING).valueOf : is_deep_strict_equal_x_esm_UNDEFINED;
 
-var hasArrayBuffer = typeof ArrayBuffer === 'function' && function testArrayBuffer() {
-  try {
-    /* eslint-disable-next-line compat/compat */
-    return is_array_buffer_x_esm(new ArrayBuffer(4));
-  } catch (ignore) {
-    return false;
-  }
-}();
-/* eslint-disable-next-line compat/compat */
+var is_deep_strict_equal_x_esm_testArrayBuffer = function testArrayBuffer() {
+  if (typeof ArrayBuffer === 'function') {
+    var res = attempt_x_esm(function attemptee() {
+      /* eslint-disable-next-line compat/compat */
+      return is_array_buffer_x_esm(new ArrayBuffer(4));
+    });
 
+    if (res.threw === false) {
+      return res.value;
+    }
+  }
+
+  return false;
+};
+
+var hasArrayBuffer = is_deep_strict_equal_x_esm_testArrayBuffer();
+/* eslint-disable-next-line compat/compat */
 
 var hasIsView = hasArrayBuffer && typeof ArrayBuffer.isView === 'function';
 var is_deep_strict_equal_x_esm_isArrayBufferView = hasIsView ? ArrayBuffer.isView
@@ -6614,8 +6619,6 @@ var ONLY_ENUMERABLE = 2; // const ONLY_CONFIGURABLE = 4;
 var SKIP_SYMBOLS = 16;
 
 var is_deep_strict_equal_x_esm_getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter) {
-  var _this = this;
-
   // noinspection JSBitwiseOperatorUsage
   var names = filter & ONLY_ENUMERABLE
   /* eslint-disable-line no-bitwise */
@@ -6624,11 +6627,9 @@ var is_deep_strict_equal_x_esm_getOwnNonIndexProperties = function getOwnNonInde
   var symbols = filter & SKIP_SYMBOLS
   /* eslint-disable-line no-bitwise */
   ? [] : get_own_property_symbols_x_esm(value);
-  return array_filter_x_esm([].concat(_toConsumableArray(names), _toConsumableArray(symbols)), function (key) {
-    is_deep_strict_equal_x_esm_newArrowCheck(this, _this);
-
+  return array_filter_x_esm(is_deep_strict_equal_x_esm_concat.call([], names, symbols), function predicate(key) {
     return !is_index_x_esm(key);
-  }.bind(this));
+  });
 };
 
 var kStrict = true;
@@ -6698,13 +6699,9 @@ var setHasEqualElement = function setHasEqualElement(args) {
 };
 
 var is_deep_strict_equal_x_esm_getEnumerables = function getEnumerables(val, keys) {
-  var _this2 = this;
-
-  return array_filter_x_esm(keys, function (k) {
-    is_deep_strict_equal_x_esm_newArrowCheck(this, _this2);
-
+  return array_filter_x_esm(keys, function predicate(k) {
     return property_is_enumerable_x_esm(val, k);
-  }.bind(this));
+  });
 }; // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Loose_equality_using
 // Sadly it is not possible to detect corresponding values properly in case the
 // type is a string, number, bigint or boolean. The reason is that those values
@@ -6782,11 +6779,16 @@ var mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
   return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
 };
 
-function setEquiv(a, b, strict, memo) {
-  // This is a lazily initiated Set of entries which have to be compared
-  // pairwise.
+var is_deep_strict_equal_x_esm_setEquiv = function setEquiv(args) {
+  var _args4 = _slicedToArray(args, 4),
+      a = _args4[0],
+      b = _args4[1],
+      strict = _args4[2],
+      memo = _args4[3]; // This is a lazily initiated Set of entries which have to be compared pairwise.
 
   /** @type {Set} */
+
+
   var set = null;
   var setIterA = a.values();
   var nextA = setIterA.next();
@@ -6849,16 +6851,16 @@ function setEquiv(a, b, strict, memo) {
   }
 
   return true;
-}
+};
 
 var mapHasEqualEntry = function mapHasEqualEntry(args) {
-  var _args4 = _slicedToArray(args, 6),
-      set = _args4[0],
-      map = _args4[1],
-      key1 = _args4[2],
-      item1 = _args4[3],
-      strict = _args4[4],
-      memo = _args4[5]; // To be able to handle cases like:
+  var _args5 = _slicedToArray(args, 6),
+      set = _args5[0],
+      map = _args5[1],
+      key1 = _args5[2],
+      item1 = _args5[3],
+      strict = _args5[4],
+      memo = _args5[5]; // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
 
@@ -6881,11 +6883,11 @@ var mapHasEqualEntry = function mapHasEqualEntry(args) {
 };
 
 var is_deep_strict_equal_x_esm_mapEquiv = function mapEquiv(args) {
-  var _args5 = _slicedToArray(args, 4),
-      a = _args5[0],
-      b = _args5[1],
-      strict = _args5[2],
-      memo = _args5[3];
+  var _args6 = _slicedToArray(args, 4),
+      a = _args6[0],
+      b = _args6[1],
+      strict = _args6[2],
+      memo = _args6[3];
   /** @type {Set} */
 
 
@@ -6978,20 +6980,20 @@ var is_deep_strict_equal_x_esm_isEqualBoxedPrimitive = function isEqualBoxedPrim
 };
 
 var is_deep_strict_equal_x_esm_objEquiv = function objEquiv(args) {
-  var _args6 = _slicedToArray(args, 6),
-      a = _args6[0],
-      b = _args6[1],
-      strict = _args6[2],
-      keys = _args6[3],
-      memos = _args6[4],
-      iterationType = _args6[5]; // Sets and maps don't have their entries accessible via normal object
+  var _args7 = _slicedToArray(args, 6),
+      a = _args7[0],
+      b = _args7[1],
+      strict = _args7[2],
+      keys = _args7[3],
+      memos = _args7[4],
+      iterationType = _args7[5]; // Sets and maps don't have their entries accessible via normal object
   // properties.
 
 
   var i = 0;
 
   if (iterationType === kIsSet) {
-    if (!setEquiv(a, b, strict, memos)) {
+    if (!is_deep_strict_equal_x_esm_setEquiv([a, b, strict, memos])) {
       return false;
     }
   } else if (iterationType === kIsMap) {
@@ -7037,13 +7039,13 @@ var is_deep_strict_equal_x_esm_objEquiv = function objEquiv(args) {
 };
 
 var is_deep_strict_equal_x_esm_keyCheck = function keyCheck(args) {
-  var _args7 = _slicedToArray(args, 6),
-      val1 = _args7[0],
-      val2 = _args7[1],
-      strict = _args7[2],
-      memos = _args7[3],
-      iterationType = _args7[4],
-      aKeys = _args7[5];
+  var _args8 = _slicedToArray(args, 6),
+      val1 = _args8[0],
+      val2 = _args8[1],
+      strict = _args8[2],
+      memos = _args8[3],
+      iterationType = _args8[4],
+      aKeys = _args8[5];
 
   var $memos = memos;
   var $aKeys = aKeys; // For all remaining Object pairs, including Array, objects and Maps,
@@ -7086,7 +7088,7 @@ var is_deep_strict_equal_x_esm_keyCheck = function keyCheck(args) {
             return false;
           }
 
-          $aKeys.push(key);
+          push.call($aKeys, key);
           count += 1;
         } else if (property_is_enumerable_x_esm(val2, key)) {
           return false;
@@ -7162,11 +7164,11 @@ var is_deep_strict_equal_x_esm_keyCheck = function keyCheck(args) {
 
 
 $innerDeepEqual = function innerDeepEqual(args) {
-  var _args8 = _slicedToArray(args, 4),
-      val1 = _args8[0],
-      val2 = _args8[1],
-      strict = _args8[2],
-      memos = _args8[3]; // All identical values are equivalent, as determined by ===.
+  var _args9 = _slicedToArray(args, 4),
+      val1 = _args9[0],
+      val2 = _args9[1],
+      strict = _args9[2],
+      memos = _args9[3]; // All identical values are equivalent, as determined by ===.
 
 
   if (val1 === val2) {
