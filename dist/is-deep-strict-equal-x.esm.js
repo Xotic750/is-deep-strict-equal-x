@@ -1,3 +1,5 @@
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -5,8 +7,6 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
 
@@ -47,7 +47,6 @@ import isIndex from 'is-index-x';
 import { MapConstructor, SetConstructor } from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
-import slice from 'array-slice-x';
 /* eslint-disable-next-line no-void */
 
 var UNDEFINED = void 0;
@@ -169,15 +168,21 @@ var areEqualArrayBuffers = function areEqualArrayBuffers(buf1, buf2) {
   return buf1.byteLength === buf2.byteLength && isArrayBufferEqual(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
 };
 
-var setHasEqualElement = function setHasEqualElement(set, val1, strict, memo) {
-  // Go looking.
+var setHasEqualElement = function setHasEqualElement(args) {
+  var _args = _slicedToArray(args, 4),
+      set = _args[0],
+      val1 = _args[1],
+      strict = _args[2],
+      memo = _args[3]; // Go looking.
+
+
   var setIter = set.values();
   var next = setIter.next();
 
   while (!next.done) {
     var val2 = next.value;
 
-    if ($innerDeepEqual(val1, val2, strict, memo)) {
+    if ($innerDeepEqual([val1, val2, strict, memo])) {
       // Remove the matching element to make sure we do not check that again.
       set.delete(val2);
       return true;
@@ -236,13 +241,11 @@ var findLooseMatchingPrimitives = function findLooseMatchingPrimitives(prim) {
   return true;
 };
 
-var setMightHaveLoosePrim = function setMightHaveLoosePrim() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice = slice(arguments),
-      _slice2 = _slicedToArray(_slice, 3),
-      a = _slice2[0],
-      b = _slice2[1],
-      prim = _slice2[2];
+var setMightHaveLoosePrim = function setMightHaveLoosePrim(args) {
+  var _args2 = _slicedToArray(args, 3),
+      a = _args2[0],
+      b = _args2[1],
+      prim = _args2[2];
 
   var altValue = findLooseMatchingPrimitives(prim);
 
@@ -253,15 +256,13 @@ var setMightHaveLoosePrim = function setMightHaveLoosePrim() {
   return b.has(altValue) && !a.has(altValue);
 };
 
-var mapMightHaveLoosePrim = function mapMightHaveLoosePrim() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice3 = slice(arguments),
-      _slice4 = _slicedToArray(_slice3, 5),
-      a = _slice4[0],
-      b = _slice4[1],
-      prim = _slice4[2],
-      item = _slice4[3],
-      memo = _slice4[4];
+var mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
+  var _args3 = _slicedToArray(args, 5),
+      a = _args3[0],
+      b = _args3[1],
+      prim = _args3[2],
+      item = _args3[3],
+      memo = _args3[4];
 
   var altValue = findLooseMatchingPrimitives(prim);
 
@@ -271,11 +272,11 @@ var mapMightHaveLoosePrim = function mapMightHaveLoosePrim() {
 
   var curB = b.get(altValue);
 
-  if (typeof curB === 'undefined' && !b.has(altValue) || !$innerDeepEqual(item, curB, false, memo)) {
+  if (typeof curB === 'undefined' && !b.has(altValue) || !$innerDeepEqual([item, curB, false, memo])) {
     return false;
   }
 
-  return !a.has(altValue) && $innerDeepEqual(item, curB, false, memo);
+  return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
 };
 
 function setEquiv(a, b, strict, memo) {
@@ -308,7 +309,7 @@ function setEquiv(a, b, strict, memo) {
       } // Fast path to detect missing string, symbol, undefined and null values.
 
 
-      if (!setMightHaveLoosePrim(a, b, val)) {
+      if (!setMightHaveLoosePrim([a, b, val])) {
         return false;
       }
 
@@ -331,10 +332,10 @@ function setEquiv(a, b, strict, memo) {
       // matching and only if it's not, go hunting for it.
 
       if (_typeof(_val) === 'object' && _val !== null) {
-        if (!setHasEqualElement(set, _val, strict, memo)) {
+        if (!setHasEqualElement([set, _val, strict, memo])) {
           return false;
         }
-      } else if (!strict && !a.has(_val) && !setHasEqualElement(set, _val, strict, memo)) {
+      } else if (!strict && !a.has(_val) && !setHasEqualElement([set, _val, strict, memo])) {
         return false;
       }
 
@@ -347,16 +348,14 @@ function setEquiv(a, b, strict, memo) {
   return true;
 }
 
-var mapHasEqualEntry = function mapHasEqualEntry() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice5 = slice(arguments),
-      _slice6 = _slicedToArray(_slice5, 6),
-      set = _slice6[0],
-      map = _slice6[1],
-      key1 = _slice6[2],
-      item1 = _slice6[3],
-      strict = _slice6[4],
-      memo = _slice6[5]; // To be able to handle cases like:
+var mapHasEqualEntry = function mapHasEqualEntry(args) {
+  var _args4 = _slicedToArray(args, 6),
+      set = _args4[0],
+      map = _args4[1],
+      key1 = _args4[2],
+      item1 = _args4[3],
+      strict = _args4[4],
+      memo = _args4[5]; // To be able to handle cases like:
   //   Map([[{}, 'a'], [{}, 'b']]) vs Map([[{}, 'b'], [{}, 'a']])
   // ... we need to consider *all* matching keys, not just the first we find.
 
@@ -367,7 +366,7 @@ var mapHasEqualEntry = function mapHasEqualEntry() {
   while (!next.done) {
     var key2 = next.value;
 
-    if ($innerDeepEqual(key1, key2, strict, memo) && $innerDeepEqual(item1, map.get(key2), strict, memo)) {
+    if ($innerDeepEqual([key1, key2, strict, memo]) && $innerDeepEqual([item1, map.get(key2), strict, memo])) {
       set.delete(key2);
       return true;
     }
@@ -378,14 +377,12 @@ var mapHasEqualEntry = function mapHasEqualEntry() {
   return false;
 };
 
-var mapEquiv = function mapEquiv() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice7 = slice(arguments),
-      _slice8 = _slicedToArray(_slice7, 4),
-      a = _slice8[0],
-      b = _slice8[1],
-      strict = _slice8[2],
-      memo = _slice8[3];
+var mapEquiv = function mapEquiv(args) {
+  var _args5 = _slicedToArray(args, 4),
+      a = _args5[0],
+      b = _args5[1],
+      strict = _args5[2],
+      memo = _args5[3];
   /** @type {Set} */
 
 
@@ -409,14 +406,14 @@ var mapEquiv = function mapEquiv() {
       // almost all possible cases.
       var item2 = b.get(key);
 
-      if (typeof item2 === 'undefined' && !b.has(key) || !$innerDeepEqual(item1, item2, strict, memo)) {
+      if (typeof item2 === 'undefined' && !b.has(key) || !$innerDeepEqual([item1, item2, strict, memo])) {
         if (strict) {
           return false;
         } // Fast path to detect missing string, symbol, undefined and null
         // keys.
 
 
-        if (!mapMightHaveLoosePrim(a, b, key, item1, memo)) {
+        if (!mapMightHaveLoosePrim([a, b, key, item1, memo])) {
           return false;
         }
 
@@ -441,10 +438,10 @@ var mapEquiv = function mapEquiv() {
           item = _nextB$value[1];
 
       if (_typeof(key) === 'object' && key !== null) {
-        if (!mapHasEqualEntry(set, a, key, item, strict, memo)) {
+        if (!mapHasEqualEntry([set, a, key, item, strict, memo])) {
           return false;
         }
-      } else if (!strict && (!a.has(key) || !$innerDeepEqual(a.get(key), item, false, memo)) && !mapHasEqualEntry(set, a, key, item, false, memo)) {
+      } else if (!strict && (!a.has(key) || !$innerDeepEqual([a.get(key), item, false, memo])) && !mapHasEqualEntry([set, a, key, item, false, memo])) {
         return false;
       }
 
@@ -477,16 +474,14 @@ var isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   return isSymbolObject(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
 };
 
-var objEquiv = function objEquiv() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice9 = slice(arguments),
-      _slice10 = _slicedToArray(_slice9, 6),
-      a = _slice10[0],
-      b = _slice10[1],
-      strict = _slice10[2],
-      keys = _slice10[3],
-      memos = _slice10[4],
-      iterationType = _slice10[5]; // Sets and maps don't have their entries accessible via normal object
+var objEquiv = function objEquiv(args) {
+  var _args6 = _slicedToArray(args, 6),
+      a = _args6[0],
+      b = _args6[1],
+      strict = _args6[2],
+      keys = _args6[3],
+      memos = _args6[4],
+      iterationType = _args6[5]; // Sets and maps don't have their entries accessible via normal object
   // properties.
 
 
@@ -497,13 +492,13 @@ var objEquiv = function objEquiv() {
       return false;
     }
   } else if (iterationType === kIsMap) {
-    if (!mapEquiv(a, b, strict, memos)) {
+    if (!mapEquiv([a, b, strict, memos])) {
       return false;
     }
   } else if (iterationType === kIsArray) {
     for (; i < a.length; i += 1) {
       if (hasOwnProperty(a, i)) {
-        if (!hasOwnProperty(b, i) || !$innerDeepEqual(a[i], b[i], strict, memos)) {
+        if (!hasOwnProperty(b, i) || !$innerDeepEqual([a[i], b[i], strict, memos])) {
           return false;
         }
       } else if (hasOwnProperty(b, i)) {
@@ -515,7 +510,7 @@ var objEquiv = function objEquiv() {
         for (; i < keysA.length; i += 1) {
           var key = keysA[i];
 
-          if (!hasOwnProperty(b, key) || !$innerDeepEqual(a[key], b[key], strict, memos)) {
+          if (!hasOwnProperty(b, key) || !$innerDeepEqual([a[key], b[key], strict, memos])) {
             return false;
           }
         }
@@ -530,7 +525,7 @@ var objEquiv = function objEquiv() {
   for (i = 0; i < keys.length; i += 1) {
     var _key = keys[i];
 
-    if (!$innerDeepEqual(a[_key], b[_key], strict, memos)) {
+    if (!$innerDeepEqual([a[_key], b[_key], strict, memos])) {
       return false;
     }
   }
@@ -538,16 +533,14 @@ var objEquiv = function objEquiv() {
   return true;
 };
 
-var keyCheck = function keyCheck() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice11 = slice(arguments),
-      _slice12 = _slicedToArray(_slice11, 6),
-      val1 = _slice12[0],
-      val2 = _slice12[1],
-      strict = _slice12[2],
-      memos = _slice12[3],
-      iterationType = _slice12[4],
-      aKeys = _slice12[5];
+var keyCheck = function keyCheck(args) {
+  var _args7 = _slicedToArray(args, 6),
+      val1 = _args7[0],
+      val2 = _args7[1],
+      strict = _args7[2],
+      memos = _args7[3],
+      iterationType = _args7[4],
+      aKeys = _args7[5];
 
   var $memos = memos;
   var $aKeys = aKeys; // For all remaining Object pairs, including Array, objects and Maps,
@@ -558,7 +551,7 @@ var keyCheck = function keyCheck() {
   // d) For Sets and Maps, equal contents
   // Note: this accounts for both named and indexed properties on Arrays.
 
-  if (arguments.length === 5) {
+  if (args.length === 5) {
     $aKeys = objectKeys(val1);
     var bKeys = objectKeys(val2); // The pair must have the same number of owned properties.
 
@@ -576,7 +569,7 @@ var keyCheck = function keyCheck() {
     }
   }
 
-  if (strict && arguments.length === 5) {
+  if (strict && args.length === 5) {
     var symbolKeysA = getOwnPropertySymbols(val1);
 
     if (symbolKeysA.length !== 0) {
@@ -641,7 +634,7 @@ var keyCheck = function keyCheck() {
 
   $memos.val1.set(val1, $memos.position);
   $memos.val2.set(val2, $memos.position);
-  var areEq = objEquiv(val1, val2, strict, $aKeys, $memos, iterationType);
+  var areEq = objEquiv([val1, val2, strict, $aKeys, $memos, iterationType]);
   $memos.val1.delete(val1);
   $memos.val2.delete(val2);
   return areEq;
@@ -665,14 +658,12 @@ var keyCheck = function keyCheck() {
 // b) The same prototypes.
 
 
-$innerDeepEqual = function innerDeepEqual() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice13 = slice(arguments),
-      _slice14 = _slicedToArray(_slice13, 4),
-      val1 = _slice14[0],
-      val2 = _slice14[1],
-      strict = _slice14[2],
-      memos = _slice14[3]; // All identical values are equivalent, as determined by ===.
+$innerDeepEqual = function innerDeepEqual(args) {
+  var _args8 = _slicedToArray(args, 4),
+      val1 = _args8[0],
+      val2 = _args8[1],
+      strict = _args8[2],
+      memos = _args8[3]; // All identical values are equivalent, as determined by ===.
 
 
   if (val1 === val2) {
@@ -735,11 +726,11 @@ $innerDeepEqual = function innerDeepEqual() {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsArray, keys1);
+    return keyCheck([val1, val2, strict, memos, kIsArray, keys1]);
   }
 
   if (val1Tag === '[object Object]') {
-    return keyCheck(val1, val2, strict, memos, kNoIterator);
+    return keyCheck([val1, val2, strict, memos, kNoIterator]);
   }
 
   if (isDate(val1)) {
@@ -780,19 +771,19 @@ $innerDeepEqual = function innerDeepEqual() {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kNoIterator, _keys);
+    return keyCheck([val1, val2, strict, memos, kNoIterator, _keys]);
   } else if (isSet(val1)) {
     if (!isSet(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsSet);
+    return keyCheck([val1, val2, strict, memos, kIsSet]);
   } else if (isMap(val1)) {
     if (!isMap(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsMap);
+    return keyCheck([val1, val2, strict, memos, kIsMap]);
   } else if (isAnyArrayBuffer(val1)) {
     if (!areEqualArrayBuffers(val1, val2)) {
       return false;
@@ -801,15 +792,15 @@ $innerDeepEqual = function innerDeepEqual() {
     return false;
   }
 
-  return keyCheck(val1, val2, strict, memos, kNoIterator);
+  return keyCheck([val1, val2, strict, memos, kNoIterator]);
 }; // noinspection JSUnusedGlobalSymbols
 
 
 export function isDeepEqual(val1, val2) {
-  return $innerDeepEqual(val1, val2, kLoose);
+  return $innerDeepEqual([val1, val2, kLoose]);
 }
 export function isDeepStrictEqual(val1, val2) {
-  return $innerDeepEqual(val1, val2, kStrict);
+  return $innerDeepEqual([val1, val2, kStrict]);
 }
 
 //# sourceMappingURL=is-deep-strict-equal-x.esm.js.map

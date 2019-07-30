@@ -27,7 +27,6 @@ import isIndex from 'is-index-x';
 import {MapConstructor, SetConstructor} from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
-import slice from 'array-slice-x';
 
 /* eslint-disable-next-line no-void */
 const UNDEFINED = void 0;
@@ -141,7 +140,8 @@ const areEqualArrayBuffers = function areEqualArrayBuffers(buf1, buf2) {
   return buf1.byteLength === buf2.byteLength && isArrayBufferEqual(new Uint8Array(buf1).buffer, new Uint8Array(buf2).buffer);
 };
 
-const setHasEqualElement = function setHasEqualElement(set, val1, strict, memo) {
+const setHasEqualElement = function setHasEqualElement(args) {
+  const [set, val1, strict, memo] = args;
   // Go looking.
   const setIter = set.values();
   let next = setIter.next();
@@ -279,10 +279,10 @@ function setEquiv(a, b, strict, memo) {
       // We have to check if a primitive value is already
       // matching and only if it's not, go hunting for it.
       if (typeof val === 'object' && val !== null) {
-        if (!setHasEqualElement(set, val, strict, memo)) {
+        if (!setHasEqualElement([set, val, strict, memo])) {
           return false;
         }
-      } else if (!strict && !a.has(val) && !setHasEqualElement(set, val, strict, memo)) {
+      } else if (!strict && !a.has(val) && !setHasEqualElement([set, val, strict, memo])) {
         return false;
       }
 
@@ -458,9 +458,8 @@ const objEquiv = function objEquiv(args) {
   return true;
 };
 
-const keyCheck = function keyCheck() {
-  /* eslint-disable-next-line prefer-rest-params */
-  const [val1, val2, strict, memos, iterationType, aKeys] = slice(arguments);
+const keyCheck = function keyCheck(args) {
+  const [val1, val2, strict, memos, iterationType, aKeys] = args;
   let $memos = memos;
   let $aKeys = aKeys;
 
@@ -471,7 +470,7 @@ const keyCheck = function keyCheck() {
   // c) Equivalent values for every corresponding key/index
   // d) For Sets and Maps, equal contents
   // Note: this accounts for both named and indexed properties on Arrays.
-  if (arguments.length === 5) {
+  if (args.length === 5) {
     $aKeys = objectKeys(val1);
     const bKeys = objectKeys(val2);
 
@@ -489,7 +488,7 @@ const keyCheck = function keyCheck() {
     }
   }
 
-  if (strict && arguments.length === 5) {
+  if (strict && args.length === 5) {
     const symbolKeysA = getOwnPropertySymbols(val1);
 
     if (symbolKeysA.length !== 0) {
@@ -646,11 +645,11 @@ $innerDeepEqual = function innerDeepEqual(args) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsArray, keys1);
+    return keyCheck([val1, val2, strict, memos, kIsArray, keys1]);
   }
 
   if (val1Tag === '[object Object]') {
-    return keyCheck(val1, val2, strict, memos, kNoIterator);
+    return keyCheck([val1, val2, strict, memos, kNoIterator]);
   }
 
   if (isDate(val1)) {
@@ -688,19 +687,19 @@ $innerDeepEqual = function innerDeepEqual(args) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kNoIterator, keys1);
+    return keyCheck([val1, val2, strict, memos, kNoIterator, keys1]);
   } else if (isSet(val1)) {
     if (!isSet(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsSet);
+    return keyCheck([val1, val2, strict, memos, kIsSet]);
   } else if (isMap(val1)) {
     if (!isMap(val2) || val1.size !== val2.size) {
       return false;
     }
 
-    return keyCheck(val1, val2, strict, memos, kIsMap);
+    return keyCheck([val1, val2, strict, memos, kIsMap]);
   } else if (isAnyArrayBuffer(val1)) {
     if (!areEqualArrayBuffers(val1, val2)) {
       return false;
@@ -709,7 +708,7 @@ $innerDeepEqual = function innerDeepEqual(args) {
     return false;
   }
 
-  return keyCheck(val1, val2, strict, memos, kNoIterator);
+  return keyCheck([val1, val2, strict, memos, kNoIterator]);
 };
 
 // noinspection JSUnusedGlobalSymbols
