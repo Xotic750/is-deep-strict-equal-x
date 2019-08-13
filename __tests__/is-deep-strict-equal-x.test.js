@@ -1,3 +1,4 @@
+/* eslint-disable-next-line max-classes-per-file */
 import isBigIntObject from 'is-bigint';
 import {isDeepStrictEqual} from 'src/is-deep-strict-equal-x';
 
