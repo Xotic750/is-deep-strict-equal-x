@@ -38,9 +38,11 @@ import { MapConstructor, SetConstructor } from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
 import attempt from 'attempt-x';
-var _ref = [],
-    concat = _ref.concat,
-    push = _ref.push;
+import methodize from 'simple-methodize-x';
+import toBoolean from 'to-boolean-x';
+var tempArray = [];
+var push = methodize(tempArray.push);
+var concat = methodize(tempArray.concat);
 /* eslint-disable-next-line no-void */
 
 var UNDEFINED = void 0;
@@ -64,14 +66,14 @@ var getBigInt48 = function getBigInt48() {
 
 var bigInt48 = getBigInt48();
 var hasBigInt = isBigIntObject(bigInt48);
-var BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
-var BooleanValueOf = true.valueOf;
-var DateGetTime = new Date().getTime;
-var NumberValueOf = 0 .valueOf;
-var StringValueOf = EMPTY_STRING.valueOf;
+var bigIntValueOf = hasBigInt ? methodize(bigInt48.valueOf) : UNDEFINED;
+var booleanValueOf = methodize(true.valueOf);
+var dateGetTime = methodize(new Date().getTime);
+var numberValueOf = methodize(0 .valueOf);
+var stringValueOf = methodize(EMPTY_STRING.valueOf);
 /* eslint-disable-next-line compat/compat */
 
-var SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
+var symbolValueOf = hasSymbolSupport ? methodize(Symbol(EMPTY_STRING).valueOf) : UNDEFINED;
 
 var testArrayBuffer = function testArrayBuffer() {
   if (typeof ArrayBuffer === 'function') {
@@ -124,8 +126,8 @@ var getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter) 
   var symbols = filter & SKIP_SYMBOLS
   /* eslint-disable-line no-bitwise */
   ? [] : getOwnPropertySymbols(value);
-  return arrayFilter(concat.call([], names, symbols), function predicate(key) {
-    return !isIndex(key);
+  return arrayFilter(concat(names, symbols), function predicate(key) {
+    return isIndex(key) === false;
   });
 };
 
@@ -180,7 +182,7 @@ var setHasEqualElement = function setHasEqualElement(args) {
   var setIter = set.values();
   var next = setIter.next();
 
-  while (!next.done) {
+  while (toBoolean(next.done) === false) {
     var val2 = next.value;
 
     if ($innerDeepEqual([val1, val2, strict, memo])) {
@@ -250,7 +252,7 @@ var setMightHaveLoosePrim = function setMightHaveLoosePrim(args) {
     return altValue;
   }
 
-  return b.has(altValue) && !a.has(altValue);
+  return b.has(altValue) && a.has(altValue) === false;
 };
 
 var mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
@@ -269,11 +271,11 @@ var mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
 
   var curB = b.get(altValue);
 
-  if (typeof curB === 'undefined' && !b.has(altValue) || !$innerDeepEqual([item, curB, false, memo])) {
+  if (typeof curB === 'undefined' && b.has(altValue) === false || $innerDeepEqual([item, curB, false, memo]) === false) {
     return false;
   }
 
-  return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
+  return a.has(altValue) === false && $innerDeepEqual([item, curB, false, memo]);
 };
 
 var setEquiv = function setEquiv(args) {
@@ -290,7 +292,7 @@ var setEquiv = function setEquiv(args) {
   var setIterA = a.values();
   var nextA = setIterA.next();
 
-  while (!nextA.done) {
+  while (toBoolean(nextA.done) === false) {
     var val = nextA.value; // Note: Checking for the objects first improves the performance for object
     // heavy sets but it is a minor slow down for primitives. As they are fast
     // to check this improves the worst case scenario instead.
@@ -305,7 +307,7 @@ var setEquiv = function setEquiv(args) {
 
 
       set.add(val);
-    } else if (!b.has(val)) {
+    } else if (b.has(val) === false) {
       if (strict) {
         return false;
       } // Fast path to detect missing string, symbol, undefined and null values.
@@ -329,15 +331,15 @@ var setEquiv = function setEquiv(args) {
     var setIterB = b.values();
     var nextB = setIterB.next();
 
-    while (!nextB.done) {
+    while (toBoolean(nextB.done) === false) {
       var _val = nextB.value; // We have to check if a primitive value is already
       // matching and only if it's not, go hunting for it.
 
       if (_typeof(_val) === 'object' && _val !== null) {
-        if (!setHasEqualElement([set, _val, strict, memo])) {
+        if (setHasEqualElement([set, _val, strict, memo]) === false) {
           return false;
         }
-      } else if (!strict && !a.has(_val) && !setHasEqualElement([set, _val, strict, memo])) {
+      } else if (toBoolean(strict) === false && a.has(_val) === false && setHasEqualElement([set, _val, strict, memo]) === false) {
         return false;
       }
 
@@ -458,22 +460,22 @@ var mapEquiv = function mapEquiv(args) {
 
 var isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   if (isNumberObject(val1)) {
-    return isNumberObject(val2) && objectIs(NumberValueOf.call(val1), NumberValueOf.call(val2));
+    return isNumberObject(val2) && objectIs(numberValueOf(val1), numberValueOf(val2));
   }
 
   if (isStringObject(val1)) {
-    return isStringObject(val2) && StringValueOf.call(val1) === StringValueOf.call(val2);
+    return isStringObject(val2) && stringValueOf(val1) === stringValueOf(val2);
   }
 
   if (isBooleanObject(val1)) {
-    return isBooleanObject(val2) && BooleanValueOf.call(val1) === BooleanValueOf.call(val2);
+    return isBooleanObject(val2) && booleanValueOf(val1) === booleanValueOf(val2);
   }
 
   if (isBigIntObject(val1)) {
-    return isBigIntObject(val2) && BigIntValueOf.call(val1) === BigIntValueOf.call(val2);
+    return isBigIntObject(val2) && bigIntValueOf(val1) === bigIntValueOf(val2);
   }
 
-  return isSymbolObject(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
+  return isSymbolObject(val2) && symbolValueOf(val1) === symbolValueOf(val2);
 };
 
 var objEquiv = function objEquiv(args) {
@@ -585,7 +587,7 @@ var keyCheck = function keyCheck(args) {
             return false;
           }
 
-          push.call($aKeys, key);
+          push($aKeys, key);
           count += 1;
         } else if (propertyIsEnumerable(val2, key)) {
           return false;
@@ -736,7 +738,7 @@ $innerDeepEqual = function innerDeepEqual(args) {
   }
 
   if (isDate(val1)) {
-    if (DateGetTime.call(val1) !== DateGetTime.call(val2)) {
+    if (dateGetTime(val1) !== dateGetTime(val2)) {
       return false;
     }
   } else if (isRegExp(val1)) {
@@ -751,10 +753,10 @@ $innerDeepEqual = function innerDeepEqual(args) {
     }
   } else if (isArrayBufferView(val1)) {
     if (!strict && (isFloat32Array(val1) || isFloat64Array(val1))) {
-      if (!areSimilarFloatArrays(val1, val2)) {
+      if (areSimilarFloatArrays(val1, val2) === false) {
         return false;
       }
-    } else if (!areSimilarTypedArrays(val1, val2)) {
+    } else if (areSimilarTypedArrays(val1, val2) === false) {
       return false;
     } // Buffer.compare returns true, so val1.length === val2.length. If they both
     // only contain numeric keys, we don't need to exam further than checking
@@ -775,19 +777,19 @@ $innerDeepEqual = function innerDeepEqual(args) {
 
     return keyCheck([val1, val2, strict, memos, kNoIterator, _keys]);
   } else if (isSet(val1)) {
-    if (!isSet(val2) || val1.size !== val2.size) {
+    if (isSet(val2) === false || val1.size !== val2.size) {
       return false;
     }
 
     return keyCheck([val1, val2, strict, memos, kIsSet]);
   } else if (isMap(val1)) {
-    if (!isMap(val2) || val1.size !== val2.size) {
+    if (isMap(val2) === false || val1.size !== val2.size) {
       return false;
     }
 
     return keyCheck([val1, val2, strict, memos, kIsMap]);
   } else if (isAnyArrayBuffer(val1)) {
-    if (!areEqualArrayBuffers(val1, val2)) {
+    if (areEqualArrayBuffers(val1, val2) === false) {
       return false;
     }
   } else if (isBoxedPrimitive(val1) && !isEqualBoxedPrimitive(val1, val2)) {

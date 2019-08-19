@@ -77,6 +77,8 @@
     "object-keys-x": "^3.1.0",
     "property-is-enumerable-x": "^2.1.0",
     "same-value-x": "^2.1.0",
+    "simple-methodize-x": "^1.0.2",
+    "to-boolean-x": "^2.1.0",
     "to-string-symbols-supported-x": "^2.1.0",
     "to-string-tag-x": "^2.1.0",
     "which-typed-array": "^1.1.0"

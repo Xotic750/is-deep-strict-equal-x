@@ -28,8 +28,12 @@ import {MapConstructor, SetConstructor} from 'collections-x';
 import isArrayBufferEqual from 'arraybuffer-equal';
 import isDataView from 'is-data-view-x';
 import attempt from 'attempt-x';
+import methodize from 'simple-methodize-x';
+import toBoolean from 'to-boolean-x';
 
-const {concat, push} = [];
+const tempArray = [];
+const push = methodize(tempArray.push);
+const concat = methodize(tempArray.concat);
 /* eslint-disable-next-line no-void */
 const UNDEFINED = void 0;
 const EMPTY_STRING = '';
@@ -52,13 +56,13 @@ const getBigInt48 = function getBigInt48() {
 
 const bigInt48 = getBigInt48();
 const hasBigInt = isBigIntObject(bigInt48);
-const BigIntValueOf = hasBigInt ? bigInt48.valueOf : UNDEFINED;
-const BooleanValueOf = true.valueOf;
-const DateGetTime = new Date().getTime;
-const NumberValueOf = (0).valueOf;
-const StringValueOf = EMPTY_STRING.valueOf;
+const bigIntValueOf = hasBigInt ? methodize(bigInt48.valueOf) : UNDEFINED;
+const booleanValueOf = methodize(true.valueOf);
+const dateGetTime = methodize(new Date().getTime);
+const numberValueOf = methodize((0).valueOf);
+const stringValueOf = methodize(EMPTY_STRING.valueOf);
 /* eslint-disable-next-line compat/compat */
-const SymbolValueOf = hasSymbolSupport ? Symbol(EMPTY_STRING).valueOf : UNDEFINED;
+const symbolValueOf = hasSymbolSupport ? methodize(Symbol(EMPTY_STRING).valueOf) : UNDEFINED;
 const testArrayBuffer = function testArrayBuffer() {
   if (typeof ArrayBuffer === 'function') {
     const res = attempt(function attemptee() {
@@ -107,8 +111,8 @@ const getOwnNonIndexProperties = function getOwnNonIndexProperties(value, filter
   // noinspection JSBitwiseOperatorUsage
   const symbols = filter & SKIP_SYMBOLS /* eslint-disable-line no-bitwise */ ? [] : getOwnPropertySymbols(value);
 
-  return arrayFilter(concat.call([], names, symbols), function predicate(key) {
-    return !isIndex(key);
+  return arrayFilter(concat(names, symbols), function predicate(key) {
+    return isIndex(key) === false;
   });
 };
 
@@ -158,7 +162,7 @@ const setHasEqualElement = function setHasEqualElement(args) {
   // Go looking.
   const setIter = set.values();
   let next = setIter.next();
-  while (!next.done) {
+  while (toBoolean(next.done) === false) {
     const val2 = next.value;
 
     if ($innerDeepEqual([val1, val2, strict, memo])) {
@@ -222,7 +226,7 @@ const setMightHaveLoosePrim = function setMightHaveLoosePrim(args) {
     return altValue;
   }
 
-  return b.has(altValue) && !a.has(altValue);
+  return b.has(altValue) && a.has(altValue) === false;
 };
 
 const mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
@@ -235,11 +239,11 @@ const mapMightHaveLoosePrim = function mapMightHaveLoosePrim(args) {
 
   const curB = b.get(altValue);
 
-  if ((typeof curB === 'undefined' && !b.has(altValue)) || !$innerDeepEqual([item, curB, false, memo])) {
+  if ((typeof curB === 'undefined' && b.has(altValue) === false) || $innerDeepEqual([item, curB, false, memo]) === false) {
     return false;
   }
 
-  return !a.has(altValue) && $innerDeepEqual([item, curB, false, memo]);
+  return a.has(altValue) === false && $innerDeepEqual([item, curB, false, memo]);
 };
 
 const setEquiv = function setEquiv(args) {
@@ -249,7 +253,7 @@ const setEquiv = function setEquiv(args) {
   let set = null;
   const setIterA = a.values();
   let nextA = setIterA.next();
-  while (!nextA.done) {
+  while (toBoolean(nextA.done) === false) {
     const val = nextA.value;
 
     // Note: Checking for the objects first improves the performance for object
@@ -265,7 +269,7 @@ const setEquiv = function setEquiv(args) {
       // hunting for something that's deep-(strict-)equal to it. To make this
       // O(n log n) complexity we have to copy these values in a new set first.
       set.add(val);
-    } else if (!b.has(val)) {
+    } else if (b.has(val) === false) {
       if (strict) {
         return false;
       }
@@ -288,16 +292,16 @@ const setEquiv = function setEquiv(args) {
   if (set !== null) {
     const setIterB = b.values();
     let nextB = setIterB.next();
-    while (!nextB.done) {
+    while (toBoolean(nextB.done) === false) {
       const val = nextB.value;
 
       // We have to check if a primitive value is already
       // matching and only if it's not, go hunting for it.
       if (typeof val === 'object' && val !== null) {
-        if (!setHasEqualElement([set, val, strict, memo])) {
+        if (setHasEqualElement([set, val, strict, memo]) === false) {
           return false;
         }
-      } else if (!strict && !a.has(val) && !setHasEqualElement([set, val, strict, memo])) {
+      } else if (toBoolean(strict) === false && a.has(val) === false && setHasEqualElement([set, val, strict, memo]) === false) {
         return false;
       }
 
@@ -404,22 +408,22 @@ const mapEquiv = function mapEquiv(args) {
 
 const isEqualBoxedPrimitive = function isEqualBoxedPrimitive(val1, val2) {
   if (isNumberObject(val1)) {
-    return isNumberObject(val2) && objectIs(NumberValueOf.call(val1), NumberValueOf.call(val2));
+    return isNumberObject(val2) && objectIs(numberValueOf(val1), numberValueOf(val2));
   }
 
   if (isStringObject(val1)) {
-    return isStringObject(val2) && StringValueOf.call(val1) === StringValueOf.call(val2);
+    return isStringObject(val2) && stringValueOf(val1) === stringValueOf(val2);
   }
 
   if (isBooleanObject(val1)) {
-    return isBooleanObject(val2) && BooleanValueOf.call(val1) === BooleanValueOf.call(val2);
+    return isBooleanObject(val2) && booleanValueOf(val1) === booleanValueOf(val2);
   }
 
   if (isBigIntObject(val1)) {
-    return isBigIntObject(val2) && BigIntValueOf.call(val1) === BigIntValueOf.call(val2);
+    return isBigIntObject(val2) && bigIntValueOf(val1) === bigIntValueOf(val2);
   }
 
-  return isSymbolObject(val2) && SymbolValueOf.call(val1) === SymbolValueOf.call(val2);
+  return isSymbolObject(val2) && symbolValueOf(val1) === symbolValueOf(val2);
 };
 
 const objEquiv = function objEquiv(args) {
@@ -516,7 +520,7 @@ const keyCheck = function keyCheck(args) {
             return false;
           }
 
-          push.call($aKeys, key);
+          push($aKeys, key);
           count += 1;
         } else if (propertyIsEnumerable(val2, key)) {
           return false;
@@ -668,7 +672,7 @@ $innerDeepEqual = function innerDeepEqual(args) {
   }
 
   if (isDate(val1)) {
-    if (DateGetTime.call(val1) !== DateGetTime.call(val2)) {
+    if (dateGetTime(val1) !== dateGetTime(val2)) {
       return false;
     }
   } else if (isRegExp(val1)) {
@@ -683,10 +687,10 @@ $innerDeepEqual = function innerDeepEqual(args) {
     }
   } else if (isArrayBufferView(val1)) {
     if (!strict && (isFloat32Array(val1) || isFloat64Array(val1))) {
-      if (!areSimilarFloatArrays(val1, val2)) {
+      if (areSimilarFloatArrays(val1, val2) === false) {
         return false;
       }
-    } else if (!areSimilarTypedArrays(val1, val2)) {
+    } else if (areSimilarTypedArrays(val1, val2) === false) {
       return false;
     }
 
@@ -704,19 +708,19 @@ $innerDeepEqual = function innerDeepEqual(args) {
 
     return keyCheck([val1, val2, strict, memos, kNoIterator, keys1]);
   } else if (isSet(val1)) {
-    if (!isSet(val2) || val1.size !== val2.size) {
+    if (isSet(val2) === false || val1.size !== val2.size) {
       return false;
     }
 
     return keyCheck([val1, val2, strict, memos, kIsSet]);
   } else if (isMap(val1)) {
-    if (!isMap(val2) || val1.size !== val2.size) {
+    if (isMap(val2) === false || val1.size !== val2.size) {
       return false;
     }
 
     return keyCheck([val1, val2, strict, memos, kIsMap]);
   } else if (isAnyArrayBuffer(val1)) {
-    if (!areEqualArrayBuffers(val1, val2)) {
+    if (areEqualArrayBuffers(val1, val2) === false) {
       return false;
     }
   } else if (isBoxedPrimitive(val1) && !isEqualBoxedPrimitive(val1, val2)) {
