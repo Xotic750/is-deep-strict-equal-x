@@ -4,7 +4,6 @@ import {isDeepStrictEqual} from 'src/is-deep-strict-equal-x';
 const bigInt48 = (function getBigInt48() {
   if (typeof BigInt === 'function') {
     try {
-      /* eslint-disable-next-line babel/new-cap,no-undef */
       return BigInt(48);
     } catch (ignore) {
       // empty
@@ -724,13 +723,10 @@ describe('isDeepStrictEqual', function() {
   describe('bigint', function() {
     itBigInt('bigint', function() {
       expect.assertions(6);
-      /* eslint-disable-next-line babel/new-cap,no-undef */
       utilIsDeepStrict(Object(BigInt(1)), Object(BigInt(1)));
-      /* eslint-disable-next-line babel/new-cap,no-undef */
       notUtilIsDeepStrict(Object(BigInt(1)), Object(BigInt(2)));
 
-      /* eslint-disable-next-line babel/new-cap,no-undef,no-new-object */
-      const bigintish = new Object(BigInt(42));
+      const bigintish = Object(BigInt(42));
       Object.defineProperty(bigintish, Symbol.toStringTag, {value: 'String'});
       Object.setPrototypeOf(bigintish, String.prototype);
       notUtilIsDeepStrict(bigintish, Object('42'));

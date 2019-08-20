@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-19T22:30:50.693Z",
+  "date": "2019-08-20T18:27:52.574Z",
   "describe": "",
   "description": "node's isDeepStrictEqual algorithm.",
   "file": "is-deep-strict-equal-x.js",
-  "hash": "e652c520577f28aad822",
+  "hash": "4e282596fad4f6df69a5",
   "license": "MIT",
   "version": "1.1.0"
 }
@@ -7084,7 +7084,7 @@ var $innerDeepEqual;
 var is_deep_strict_equal_x_esm_getBigInt48 = function getBigInt48() {
   if (typeof BigInt === 'function') {
     var res = attempt_x_esm(function attemptee() {
-      /* eslint-disable-next-line babel/new-cap,no-undef,compat/compat */
+      /* eslint-disable-next-line compat/compat */
       return BigInt(48);
     });
 

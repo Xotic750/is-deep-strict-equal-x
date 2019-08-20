@@ -52,7 +52,7 @@ var $innerDeepEqual;
 var getBigInt48 = function getBigInt48() {
   if (typeof BigInt === 'function') {
     var res = attempt(function attemptee() {
-      /* eslint-disable-next-line babel/new-cap,no-undef,compat/compat */
+      /* eslint-disable-next-line compat/compat */
       return BigInt(48);
     });
 
