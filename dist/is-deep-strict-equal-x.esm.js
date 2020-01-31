@@ -1,10 +1,10 @@
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -438,14 +438,14 @@ var mapEquiv = function mapEquiv(args) {
 
     while (!nextB.done) {
       var _nextB$value = _slicedToArray(nextB.value, 2),
-          key = _nextB$value[0],
+          _key = _nextB$value[0],
           item = _nextB$value[1];
 
-      if (_typeof(key) === 'object' && key !== null) {
-        if (!mapHasEqualEntry([set, a, key, item, strict, memo])) {
+      if (_typeof(_key) === 'object' && _key !== null) {
+        if (!mapHasEqualEntry([set, a, _key, item, strict, memo])) {
           return false;
         }
-      } else if (!strict && (!a.has(key) || !$innerDeepEqual([a.get(key), item, false, memo])) && !mapHasEqualEntry([set, a, key, item, false, memo])) {
+      } else if (!strict && (!a.has(_key) || !$innerDeepEqual([a.get(_key), item, false, memo])) && !mapHasEqualEntry([set, a, _key, item, false, memo])) {
         return false;
       }
 
@@ -527,9 +527,9 @@ var objEquiv = function objEquiv(args) {
 
 
   for (i = 0; i < keys.length; i += 1) {
-    var _key = keys[i];
+    var _key2 = keys[i];
 
-    if (!$innerDeepEqual([a[_key], b[_key], strict, memos])) {
+    if (!$innerDeepEqual([a[_key2], b[_key2], strict, memos])) {
       return false;
     }
   }

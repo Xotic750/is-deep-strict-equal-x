@@ -71,6 +71,7 @@ describe('isDeepStrictEqual', function() {
 
   it('regex', function() {
     expect.assertions(1);
+    /* eslint-disable-next-line prefer-regex-literals */
     const re1 = new RegExp('test');
     const re2 = new MyRegExp('test');
 
@@ -118,7 +119,16 @@ describe('isDeepStrictEqual', function() {
     notUtilIsDeepStrict(new Set([1, 2, 3]), new Set([1, 2, 3, 4]));
     notUtilIsDeepStrict(new Set([1, 2, 3, 4]), new Set([1, 2, 3]));
     utilIsDeepStrict(new Set(['1', '2', '3']), new Set(['1', '2', '3']));
-    utilIsDeepStrict(new Set([[1, 2], [3, 4]]), new Set([[3, 4], [1, 2]]));
+    utilIsDeepStrict(
+      new Set([
+        [1, 2],
+        [3, 4],
+      ]),
+      new Set([
+        [3, 4],
+        [1, 2],
+      ]),
+    );
 
     {
       const a = [1, 2];
@@ -129,10 +139,46 @@ describe('isDeepStrictEqual', function() {
       utilIsDeepStrict({a, b, s: new Set([a, b])}, {a: c, b: d, s: new Set([d, c])});
     }
 
-    utilIsDeepStrict(new Map([[1, 1], [2, 2]]), new Map([[1, 1], [2, 2]]));
-    utilIsDeepStrict(new Map([[1, 1], [2, 2]]), new Map([[2, 2], [1, 1]]));
-    notUtilIsDeepStrict(new Map([[1, 1], [2, 2]]), new Map([[1, 2], [2, 1]]));
-    notUtilIsDeepStrict(new Map([[[1], 1], [{}, 2]]), new Map([[[1], 2], [{}, 1]]));
+    utilIsDeepStrict(
+      new Map([
+        [1, 1],
+        [2, 2],
+      ]),
+      new Map([
+        [1, 1],
+        [2, 2],
+      ]),
+    );
+    utilIsDeepStrict(
+      new Map([
+        [1, 1],
+        [2, 2],
+      ]),
+      new Map([
+        [2, 2],
+        [1, 1],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [1, 1],
+        [2, 2],
+      ]),
+      new Map([
+        [1, 2],
+        [2, 1],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [[1], 1],
+        [{}, 2],
+      ]),
+      new Map([
+        [[1], 2],
+        [{}, 1],
+      ]),
+    );
 
     notUtilIsDeepStrict(new Set([1]), [1]);
     notUtilIsDeepStrict(new Set(), []);
@@ -153,33 +199,138 @@ describe('isDeepStrictEqual', function() {
     // Ref: https://github.com/nodejs/node/issues/13347
     notUtilIsDeepStrict(new Set([{a: 1}, {a: 1}]), new Set([{a: 1}, {a: 2}]));
     notUtilIsDeepStrict(new Set([{a: 1}, {a: 1}, {a: 2}]), new Set([{a: 1}, {a: 2}, {a: 2}]));
-    notUtilIsDeepStrict(new Map([[{x: 1}, 5], [{x: 1}, 5]]), new Map([[{x: 1}, 5], [{x: 2}, 5]]));
+    notUtilIsDeepStrict(
+      new Map([
+        [{x: 1}, 5],
+        [{x: 1}, 5],
+      ]),
+      new Map([
+        [{x: 1}, 5],
+        [{x: 2}, 5],
+      ]),
+    );
 
     notUtilIsDeepStrict(new Set([3, '3']), new Set([3, 4]));
-    notUtilIsDeepStrict(new Map([[3, 0], ['3', 0]]), new Map([[3, 0], [4, 0]]));
+    notUtilIsDeepStrict(
+      new Map([
+        [3, 0],
+        ['3', 0],
+      ]),
+      new Map([
+        [3, 0],
+        [4, 0],
+      ]),
+    );
 
     notUtilIsDeepStrict(new Set([{a: 1}, {a: 1}, {a: 2}]), new Set([{a: 1}, {a: 2}, {a: 2}]));
 
     // Mixed primitive and object keys
-    utilIsDeepStrict(new Map([[1, 'a'], [{}, 'a']]), new Map([[1, 'a'], [{}, 'a']]));
+    utilIsDeepStrict(
+      new Map([
+        [1, 'a'],
+        [{}, 'a'],
+      ]),
+      new Map([
+        [1, 'a'],
+        [{}, 'a'],
+      ]),
+    );
     utilIsDeepStrict(new Set([1, 'a', [{}, 'a']]), new Set([1, 'a', [{}, 'a']]));
 
     // This is an awful case, where a map contains multiple equivalent keys:
-    notUtilIsDeepStrict(new Map([[1, 'a'], ['1', 'b']]), new Map([['1', 'a'], [true, 'b']]));
+    notUtilIsDeepStrict(
+      new Map([
+        [1, 'a'],
+        ['1', 'b'],
+      ]),
+      new Map([
+        ['1', 'a'],
+        [true, 'b'],
+      ]),
+    );
     notUtilIsDeepStrict(new Set(['a']), new Set(['b']));
-    utilIsDeepStrict(new Map([[{}, 'a'], [{}, 'b']]), new Map([[{}, 'b'], [{}, 'a']]));
-    notUtilIsDeepStrict(new Map([[true, 'a'], ['1', 'b'], [1, 'a']]), new Map([['1', 'a'], [1, 'b'], [true, 'a']]));
-    notUtilIsDeepStrict(new Map([[true, 'a'], ['1', 'b'], [1, 'c']]), new Map([['1', 'a'], [1, 'b'], [true, 'a']]));
+    utilIsDeepStrict(
+      new Map([
+        [{}, 'a'],
+        [{}, 'b'],
+      ]),
+      new Map([
+        [{}, 'b'],
+        [{}, 'a'],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [true, 'a'],
+        ['1', 'b'],
+        [1, 'a'],
+      ]),
+      new Map([
+        ['1', 'a'],
+        [1, 'b'],
+        [true, 'a'],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [true, 'a'],
+        ['1', 'b'],
+        [1, 'c'],
+      ]),
+      new Map([
+        ['1', 'a'],
+        [1, 'b'],
+        [true, 'a'],
+      ]),
+    );
 
     // Similar object keys
     notUtilIsDeepStrict(new Set([{}, {}]), new Set([{}, 1]));
-    notUtilIsDeepStrict(new Set([[{}, 1], [{}, 1]]), new Set([[{}, 1], [1, 1]]));
-    notUtilIsDeepStrict(new Map([[{}, 1], [{}, 1]]), new Map([[{}, 1], [1, 1]]));
-    notUtilIsDeepStrict(new Map([[{}, 1], [true, 1]]), new Map([[{}, 1], [1, 1]]));
+    notUtilIsDeepStrict(
+      new Set([
+        [{}, 1],
+        [{}, 1],
+      ]),
+      new Set([
+        [{}, 1],
+        [1, 1],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [{}, 1],
+        [{}, 1],
+      ]),
+      new Map([
+        [{}, 1],
+        [1, 1],
+      ]),
+    );
+    notUtilIsDeepStrict(
+      new Map([
+        [{}, 1],
+        [true, 1],
+      ]),
+      new Map([
+        [{}, 1],
+        [1, 1],
+      ]),
+    );
 
     // Similar primitive key / values
     notUtilIsDeepStrict(new Set([1, true, false]), new Set(['1', 0, '0']));
-    notUtilIsDeepStrict(new Map([[1, 5], [true, 5], [false, 5]]), new Map([['1', 5], [0, 5], ['0', 5]]));
+    notUtilIsDeepStrict(
+      new Map([
+        [1, 5],
+        [true, 5],
+        [false, 5],
+      ]),
+      new Map([
+        ['1', 5],
+        [0, 5],
+        ['0', 5],
+      ]),
+    );
 
     // Undefined value in Map
     utilIsDeepStrict(new Map([[1, undefined]]), new Map([[1, undefined]]));
